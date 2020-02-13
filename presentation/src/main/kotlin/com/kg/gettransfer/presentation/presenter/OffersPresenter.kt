@@ -19,6 +19,7 @@ import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.OneSignalNotificationManager
 
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,9 @@ import org.koin.core.parameter.parametersOf
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
 
+    private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
+    private val notificationManager: OneSignalNotificationManager by inject()
+
     internal var transferId = 0L
 
     private var transfer: Transfer? = null
@@ -37,8 +41,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
     var isViewRoot: Boolean = false
-
-    private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
 
     override fun attachView(view: OffersView) {
         super.attachView(view)

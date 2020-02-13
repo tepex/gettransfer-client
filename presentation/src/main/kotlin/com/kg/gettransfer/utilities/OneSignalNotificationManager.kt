@@ -13,11 +13,11 @@ class OneSignalNotificationManager(val context: Context) : ContextWrapper(contex
         const val MESSAGE_CHANEL_POSTFIX = "_message"
     }
 
-    fun clearOfferNotifications(transferId: Long) {
-        OneSignal.cancelGroupedNotifications(transferId.toString().plus(OFFER_CHANEL_POSTFIX))
-    }
+    fun clearOfferNotifications(transferId: Long) = clearGroup(transferId, OFFER_CHANEL_POSTFIX)
 
-    fun clearChatNotifications(transferId: Long) {
-        OneSignal.cancelGroupedNotifications(transferId.toString().plus(MESSAGE_CHANEL_POSTFIX))
+    fun clearChatNotifications(transferId: Long) = clearGroup(transferId, MESSAGE_CHANEL_POSTFIX)
+
+    private fun clearGroup(transferId: Long, postfix: String) {
+        OneSignal.cancelGroupedNotifications(transferId.toString().plus(postfix))
     }
 }

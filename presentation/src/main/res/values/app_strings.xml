@@ -22,10 +22,6 @@
     <string name="app_market_package">com.gettransfer</string>
     <string name="driver_app_market_package">com.kg.gettransferdriver</string>
 
-    <!-- FCM -->
-    <string name="new_offer_notification_channel_id" translatable="false">new_offer_channel</string>
-    <string name="new_offer_notification_channel_name" translatable="true">New Offer</string>
-
     <!-- Logs -->
     <string name="title_starting_session">/////////////////////////////////////////////////////\n//////////////////// NEW SESSION ////////////////////\n/////////////////////////////////////////////////////</string>
 
@@ -46,8 +42,6 @@
     <!--Technical strings-->
     <string name="searchTransitionName">SEARCH_FORM</string>
     <string name="tag_read_more" translatable="false">read_more_dialog</string>
-    <string name="offer_channel_name">Offer</string>
-    <string name="message_channel_name">Message</string>
 
     <!-- UI Strings -->
     <string name="transfer_start_sign">A</string>

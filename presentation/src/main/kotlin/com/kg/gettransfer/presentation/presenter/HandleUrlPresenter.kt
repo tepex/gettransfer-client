@@ -14,15 +14,11 @@ import kotlinx.coroutines.launch
 import moxy.InjectViewState
 import org.koin.core.inject
 
-/** TODO: refactor to regular expressions */
 @InjectViewState
 class HandleUrlPresenter : OpenDeepLinkScreenPresenter<OpenDeepLinkScreenView>() {
 
-    lateinit var url: String
-
     private val deeplinkManager: DeeplinkManager by inject()
 
-    @Suppress("ComplexMethod")
     fun handleIntent(appLinkData: Uri) {
         when(val screen = deeplinkManager.getScreenForLink(appLinkData)) {
             is DeeplinkScreenModel.PaymentOffer -> openOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)

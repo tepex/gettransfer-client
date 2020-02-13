@@ -22,6 +22,7 @@ import com.kg.gettransfer.presentation.view.ChatView
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.CommunicationManager
+import com.kg.gettransfer.utilities.OneSignalNotificationManager
 
 import java.util.Calendar
 
@@ -38,6 +39,7 @@ class ChatPresenter : BasePresenter<ChatView>(), ChatEventListener, SocketEventL
     private val messageMapper: MessageMapper by inject()
     private val worker: WorkerManager by inject { parametersOf("ChatPresenter") }
     private val communicationManager: CommunicationManager by inject()
+    private val notificationManager: OneSignalNotificationManager by inject()
 
     private var chatModel: ChatModel? = null
     private var transferModel: TransferModel? = null

@@ -12,6 +12,9 @@ import moxy.presenter.ProvidePresenter
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.BaseHandleUrlPresenter
 import com.kg.gettransfer.presentation.view.BaseView
+import com.kg.gettransfer.utilities.DeeplinkManager.Companion.FROM_PLACE_ID
+import com.kg.gettransfer.utilities.DeeplinkManager.Companion.PROMO_CODE
+import com.kg.gettransfer.utilities.DeeplinkManager.Companion.TO_PLACE_ID
 
 import timber.log.Timber
 
@@ -61,11 +64,5 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseView {
                 Timber.d("error onAttributionFailure : $errorMessage")
             }
         })
-    }
-
-    companion object {
-        const val FROM_PLACE_ID = "from_place_id"
-        const val TO_PLACE_ID = "to_place_id"
-        const val PROMO_CODE = "promo_code"
     }
 }

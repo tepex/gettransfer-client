@@ -37,7 +37,6 @@ import com.kg.gettransfer.sys.presentation.ConfigsManager
 
 import com.kg.gettransfer.utilities.Analytics
 import com.kg.gettransfer.utilities.GTDownloadManager
-import com.kg.gettransfer.utilities.OneSignalNotificationManager
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -64,7 +63,6 @@ open class BasePresenter<BV : BaseView> : MvpPresenter<BV>(),
     protected val utils = AsyncUtils(get<CoroutineContexts>(), compositeDisposable)
     protected val router: Router by inject()
     protected val analytics: Analytics by inject()
-    protected val notificationManager: OneSignalNotificationManager by inject()
     protected val offerInteractor: OfferInteractor by inject()
     protected val transferInteractor: TransferInteractor by inject()
     protected val chatInteractor: ChatInteractor by inject()

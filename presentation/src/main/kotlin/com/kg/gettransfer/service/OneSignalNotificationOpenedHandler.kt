@@ -3,15 +3,30 @@ package com.kg.gettransfer.service
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import androidx.core.net.toUri
 import com.kg.gettransfer.core.presentation.WorkerManager
-import com.kg.gettransfer.domain.interactor.*
+import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.domain.interactor.OrderInteractor
+import com.kg.gettransfer.domain.interactor.TransferInteractor
+import com.kg.gettransfer.domain.interactor.OfferInteractor
+import com.kg.gettransfer.domain.interactor.PaymentInteractor
 import com.kg.gettransfer.domain.model.OfferItem
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.extensions.getOffer
 import com.kg.gettransfer.presentation.model.DeeplinkScreenModel
-import com.kg.gettransfer.presentation.ui.*
-import com.kg.gettransfer.presentation.view.*
+import com.kg.gettransfer.presentation.ui.HandleUrlActivity
+import com.kg.gettransfer.presentation.ui.ChatActivity
+import com.kg.gettransfer.presentation.ui.OffersActivity
+import com.kg.gettransfer.presentation.ui.TransferDetailsActivity
+import com.kg.gettransfer.presentation.ui.MainNavigateActivity
+import com.kg.gettransfer.presentation.ui.ProfileSettingsActivity
+import com.kg.gettransfer.presentation.ui.CreateOrderActivity
+import com.kg.gettransfer.presentation.ui.PaymentOfferActivity
+import com.kg.gettransfer.presentation.view.ChatView
+import com.kg.gettransfer.presentation.view.OffersView
+import com.kg.gettransfer.presentation.view.TransferDetailsView
+import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.utilities.DeeplinkManager
 import com.onesignal.OSNotificationOpenResult
 import com.onesignal.OneSignal
@@ -20,6 +35,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
+import kotlin.reflect.KClass
 
 class OneSignalNotificationOpenedHandler(
     private val application: Application
@@ -48,28 +64,14 @@ class OneSignalNotificationOpenedHandler(
         }
 
         when(val screen = deeplinkManager.getScreenForLink(appLinkData)) {
-            is DeeplinkScreenModel.DownloadVoucher -> openHandleUrlActivity(appLinkData)
-            is DeeplinkScreenModel.NewPassword -> openProfileSettingsActivity()
-            is DeeplinkScreenModel.Main -> openMainActivity()
-            is DeeplinkScreenModel.CreateOrder -> checkCreateOrderLink(screen)
-
             is DeeplinkScreenModel.PaymentOffer -> checkPaymentOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
             is DeeplinkScreenModel.Chat -> openChatActivity(screen.transferId)
             is DeeplinkScreenModel.Transfer -> checkTransferLink(screen.transferId)
             is DeeplinkScreenModel.RateTransfer -> openMainActivityForRateTransfer(screen.transferId, screen.rate)
-        }
-    }
-
-    private fun checkCreateOrderLink(screen: DeeplinkScreenModel.CreateOrder) = worker.main.launch {
-        with(orderInteractor) {
-            screen.fromPlaceId?.let { withContext(worker.bg) { updatePoint(false, it) } }
-            screen.toPlaceId?.let   { withContext(worker.bg) { updatePoint(true, it) } }
-            screen.promo?.let { promoCode = it }
-            if (isCanCreateOrder()) {
-                openCreateOrderActivity()
-            } else {
-                openMainActivity()
-            }
+            is DeeplinkScreenModel.DownloadVoucher -> openHandleUrlActivity(appLinkData)
+            is DeeplinkScreenModel.CreateOrder -> checkCreateOrderLink(screen)
+            is DeeplinkScreenModel.NewPassword -> openActivity(ProfileSettingsActivity::class)
+            is DeeplinkScreenModel.Main -> openMainActivity()
         }
     }
 
@@ -87,7 +89,7 @@ class OneSignalNotificationOpenedHandler(
                     selectedTransfer = transfer
                     selectedOffer = offerItem
                 }
-                openPaymentOfferActivity()
+                openActivity(PaymentOfferActivity::class)
             } else {
                 openMainActivity()
             }
@@ -104,74 +106,17 @@ class OneSignalNotificationOpenedHandler(
         }
     }
 
-    private fun openHandleUrlActivity(uri: Uri) {
-        val intent = Intent(application, HandleUrlActivity::class.java).apply {
-            action = Intent.ACTION_VIEW
-            data = uri
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun checkCreateOrderLink(screen: DeeplinkScreenModel.CreateOrder) = worker.main.launch {
+        with(orderInteractor) {
+            screen.fromPlaceId?.let { withContext(worker.bg) { updatePoint(false, it) } }
+            screen.toPlaceId?.let   { withContext(worker.bg) { updatePoint(true, it) } }
+            screen.promo?.let { promoCode = it }
+            if (isCanCreateOrder()) {
+                openActivity(CreateOrderActivity::class)
+            } else {
+                openMainActivity()
+            }
         }
-        application.startActivity(intent)
-    }
-
-    private fun openProfileSettingsActivity() {
-        val intent = Intent(application, ProfileSettingsActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openMainActivity() {
-        val intent = Intent(application, MainNavigateActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openCreateOrderActivity() {
-        val intent = Intent(application, CreateOrderActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openPaymentOfferActivity() {
-        val intent = Intent(application, PaymentOfferActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openChatActivity(transferId: Long) {
-        val intent = Intent(application, ChatActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openOffersActivity(transferId: Long) {
-        val intent = Intent(application, OffersActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openTransferDetailsActivity(transferId: Long) {
-        val intent = Intent(application, TransferDetailsActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            putExtra(TransferDetailsView.EXTRA_TRANSFER_ID, transferId)
-        }
-        application.startActivity(intent)
-    }
-
-    private fun openMainActivityForRateTransfer(transferId: Long, rate: Int?) {
-        val intent = Intent(application, MainNavigateActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            putExtra(MainNavigateView.EXTRA_RATE_TRANSFER_ID, transferId)
-            putExtra(MainNavigateView.EXTRA_RATE_VALUE, rate)
-        }
-        application.startActivity(intent)
     }
 
     private suspend fun getTransfer(transferId: Long): Transfer? {
@@ -182,5 +127,51 @@ class OneSignalNotificationOpenedHandler(
         } else {
             result.model
         }
+    }
+
+    private fun openHandleUrlActivity(uri: Uri) {
+        val intent = Intent(application, HandleUrlActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = uri
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        application.startActivity(intent)
+    }
+
+    private fun openChatActivity(transferId: Long) {
+        openActivity(ChatActivity::class, Bundle().apply {
+            putLong(ChatView.EXTRA_TRANSFER_ID, transferId)
+        })
+    }
+
+    private fun openOffersActivity(transferId: Long) {
+        openActivity(OffersActivity::class, Bundle().apply {
+            putLong(OffersView.EXTRA_TRANSFER_ID, transferId)
+        })
+    }
+
+    private fun openTransferDetailsActivity(transferId: Long) {
+        openActivity(TransferDetailsActivity::class, Bundle().apply {
+            putLong(TransferDetailsView.EXTRA_TRANSFER_ID, transferId)
+        })
+    }
+
+    private fun openMainActivityForRateTransfer(transferId: Long, rate: Int?) {
+        openActivity(MainNavigateActivity::class, Bundle().apply {
+            putLong(MainNavigateView.EXTRA_RATE_TRANSFER_ID, transferId)
+            rate?.let { putInt(MainNavigateView.EXTRA_RATE_VALUE, it) }
+        })
+    }
+
+    private fun openMainActivity() {
+        openActivity(MainNavigateActivity::class)
+    }
+
+    private fun <T: Any> openActivity(activity: KClass<T>, extras: Bundle? = null) {
+        val intent = Intent(application, activity.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            extras?.let { putExtras(it) }
+        }
+        application.startActivity(intent)
     }
 }
