@@ -11,22 +11,19 @@ import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.presentation.presenter.BaseHandleUrlPresenter
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PROMO_CODE
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TO_PLACE_ID
+import com.kg.gettransfer.presentation.view.BaseView
 
 import timber.log.Timber
 
-class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseHandleUrlView {
+class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseView {
 
     @InjectPresenter
-    internal lateinit var presenter: BaseHandleUrlPresenter<BaseHandleUrlView>
+    internal lateinit var presenter: BaseHandleUrlPresenter<BaseView>
 
-    override fun getPresenter(): BaseHandleUrlPresenter<BaseHandleUrlView> = presenter
+    override fun getPresenter(): BaseHandleUrlPresenter<BaseView> = presenter
 
     @ProvidePresenter
-    fun createHandleUrlPresenter() = BaseHandleUrlPresenter<BaseHandleUrlView>()
+    fun createHandleUrlPresenter() = BaseHandleUrlPresenter<BaseView>()
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,5 +61,11 @@ class AppsFlyerHandleDeepLinkActivity : BaseActivity(), BaseHandleUrlView {
                 Timber.d("error onAttributionFailure : $errorMessage")
             }
         })
+    }
+
+    companion object {
+        const val FROM_PLACE_ID = "from_place_id"
+        const val TO_PLACE_ID = "to_place_id"
+        const val PROMO_CODE = "promo_code"
     }
 }

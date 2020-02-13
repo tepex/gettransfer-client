@@ -7,11 +7,6 @@ import androidx.core.net.toUri
 import com.kg.gettransfer.domain.interactor.SessionInteractor
 import com.kg.gettransfer.presentation.ui.HandleUrlActivity
 import com.kg.gettransfer.presentation.ui.OffersActivity
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.OPEN_CHAT
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_CABINET
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_CABINET
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.SLASH
 import com.kg.gettransfer.presentation.view.OffersView
 import com.onesignal.OSNotificationOpenResult
 import com.onesignal.OneSignal
@@ -57,4 +52,12 @@ class OneSignalNotificationOpenedHandler(
             data = uri
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+
+    companion object {
+        const val PASSENGER_CABINET = "/passenger/cabinet"
+        const val PARTNER_CABINET = "/partner/cabinet"
+        const val CHOOSE_OFFER_ID = "choose_offer_id"
+        const val OPEN_CHAT = "open_chat"
+        const val SLASH = "/"
+    }
 }

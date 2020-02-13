@@ -2,13 +2,13 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.kg.gettransfer.core.presentation.WorkerManager
 import com.kg.gettransfer.extensions.createStartChain
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView
+import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.Screens
 import kotlinx.coroutines.launch
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
-open class BaseHandleUrlPresenter<BV : BaseHandleUrlView> : BasePresenter<BV>() {
+open class BaseHandleUrlPresenter<BV : BaseView> : BasePresenter<BV>() {
 
     val worker: WorkerManager by inject { parametersOf("BaseHandleUrlPresenter") }
 
