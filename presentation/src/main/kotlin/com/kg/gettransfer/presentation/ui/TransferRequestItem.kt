@@ -19,7 +19,6 @@ import com.kg.gettransfer.presentation.ui.helpers.HourlyValuesHelper
 import com.kg.gettransfer.presentation.view.RequestsView
 
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.view_communication_button.view.*
 import kotlinx.android.synthetic.main.view_transfer_request_info.view.*
 import java.util.Date
 
@@ -155,7 +154,6 @@ class TransferRequestItem @JvmOverloads constructor(
     fun showEvents(item: TransferModel, offerInfoShowed: Boolean, eventsCount: Int) {
         @Suppress("ComplexCondition")
         if (eventsCount == 0 ||
-            !item.showOfferInfo && item.statusCategory != Transfer.STATUS_CATEGORY_ACTIVE ||
             item.isPaymentInProgress()
         ) {
             tvEventsCount.isVisible = false

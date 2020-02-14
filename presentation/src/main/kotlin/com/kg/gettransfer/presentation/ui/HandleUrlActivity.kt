@@ -120,18 +120,4 @@ class HandleUrlActivity : BaseActivity(),
         }
         webView.loadUrl(url)
     }
-
-    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
-        BottomSheetDialog
-            .newInstance()
-            .apply {
-                imageId = R.drawable.transfer_error
-                title = this@HandleUrlActivity.getString(R.string.LNG_ERROR)
-                text = this@HandleUrlActivity.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
-                isShowCloseButton = true
-                isShowOkButton = false
-                onDismissCallBack = dismissCallBack
-            }
-            .show(supportFragmentManager)
-    }
 }

@@ -97,20 +97,6 @@ abstract class BaseLogInFragment : MvpAppCompatFragment(),
             .show(requireFragmentManager())
     }
 
-    override fun setChatIsNoLongerAvailableError(dismissCallBack: () -> Unit) {
-        BottomSheetDialog
-            .newInstance()
-            .apply {
-                imageId = R.drawable.transfer_error
-                title = this@BaseLogInFragment.getString(R.string.LNG_ERROR)
-                text = this@BaseLogInFragment.getString(R.string.LNG_CHAT_NO_LONGER_AVAILABLE)
-                isShowCloseButton = true
-                isShowOkButton = false
-                onDismissCallBack = dismissCallBack
-            }
-            .show(requireFragmentManager())
-    }
-
     override fun setError(e: ApiException) {}
 
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}

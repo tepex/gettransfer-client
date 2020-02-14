@@ -186,13 +186,11 @@ class TransferRepositoryImpl(
         mapCountNewOffers: MutableMap<Long, Int>
     ): Int {
         var eventsCount = 0
-        if (transfer.showOfferInfo) {
-            if (transfer.unreadMessagesCount > 0) {
-                mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
-                eventsCount += transfer.unreadMessagesCount
-            } else if (mapCountNewMessages[transfer.id] != null) {
-                mapCountNewMessages.remove(transfer.id)
-            }
+        if (transfer.status.offerMatched && transfer.unreadMessagesCount > 0) {
+            mapCountNewMessages[transfer.id] = transfer.unreadMessagesCount
+            eventsCount += transfer.unreadMessagesCount
+        } else if (mapCountNewMessages[transfer.id] != null) {
+            mapCountNewMessages.remove(transfer.id)
         }
 
         if (transfer.status == Transfer.Status.NEW && transfer.offersCount > 0) {

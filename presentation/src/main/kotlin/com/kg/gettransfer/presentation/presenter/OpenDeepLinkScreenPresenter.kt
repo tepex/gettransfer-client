@@ -41,12 +41,8 @@ open class OpenDeepLinkScreenPresenter<BV : OpenDeepLinkScreenView> : BaseHandle
     }
 
     suspend fun openChat(transferId: Long) {
-        checkTransfer(transferId).isSuccess()?.let { transfer ->
-            if (transfer.showOfferInfo) {
-                router.createStartChain(Screens.Chat(transfer.id))
-            } else {
-                viewState.setChatIsNoLongerAvailableError { onDialogDismissCallback() }
-            }
+        checkTransfer(transferId).isSuccess()?.let {
+            router.createStartChain(Screens.Chat(transferId))
         }
     }
 

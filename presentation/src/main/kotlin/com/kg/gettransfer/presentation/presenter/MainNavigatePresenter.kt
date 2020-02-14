@@ -126,7 +126,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
     }
 
     private fun getLastTransfer(transfers: List<Transfer>) =
-        transfers.filter { it.status.checkOffers }.sortedByDescending { it.dateToLocal }.firstOrNull()
+        transfers.filter { it.status.offerMatched }.sortedByDescending { it.dateToLocal }.firstOrNull()
 
     private suspend fun checkToShowReview(transfer: Transfer) =
         fetchResultOnly { offerInteractor.getOffers(transfer.id) }.isSuccess()?.firstOrNull()?.let { offer ->
@@ -165,7 +165,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         } else {
             val transfer = transferResult.model
             val transferModel = transfer.map(configsManager.getConfigs().transportTypes.map { it.map() })
-            transferModel.status.checkOffers
+            transferModel.status.offerMatched
         }
     }
 

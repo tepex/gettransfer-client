@@ -72,7 +72,6 @@ data class TransferModel(
 /* ================================================== */
     val statusCategory: String,
     val timeToTransfer: Int,
-    var showOfferInfo: Boolean,
     val matchedOffer: Offer? = null
 ) {
     fun isBookNow() = paidPercentage != 0 && bookNow != null
@@ -148,7 +147,5 @@ fun Transfer.map(transportTypesModels: List<TransportTypeModel>) =
 /* ================================================== */
 /* ================================================== */
         checkStatusCategory(),
-        ((dateToTZ.time - Date().time).absoluteValue / MILLIS_PER_MINUTE).toInt(),
-        showOfferInfo
-        // checkOffers
+        ((dateToTZ.time - Date().time).absoluteValue / MILLIS_PER_MINUTE).toInt()
     )

@@ -57,7 +57,6 @@ data class Transfer(
     val editableFields: List<String>?, /* not used */
     val airlineCard: String?,
     val unreadMessagesCount: Int,
-    val showOfferInfo: Boolean,
     val lastOffersUpdatedAt: Date?
 
 ) : Entity {
@@ -72,7 +71,7 @@ data class Transfer(
         else             -> STATUS_CATEGORY_FINISHED
     }
 
-    enum class Status(val checkOffers: Boolean) {
+    enum class Status(val offerMatched: Boolean) {
         NEW(false),
         PERFORMED(true),
         COMPLETED(true),
@@ -149,7 +148,6 @@ data class Transfer(
             editableFields      = emptyList<String>(),
             airlineCard         = null,
             unreadMessagesCount = 0,
-            showOfferInfo       = false,
             lastOffersUpdatedAt = null
         )
 
