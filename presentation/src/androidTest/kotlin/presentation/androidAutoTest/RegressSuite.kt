@@ -10,11 +10,23 @@ import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
-import org.junit.Rule
-import org.junit.Test
 import com.kg.gettransfer.presentation.data.Constants
 
-import com.kg.gettransfer.presentation.screenelements.*
+import com.kg.gettransfer.presentation.screenelements.Chat
+import com.kg.gettransfer.presentation.screenelements.BookNow
+import com.kg.gettransfer.presentation.screenelements.Locations
+import com.kg.gettransfer.presentation.screenelements.MainScreen
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
+import com.kg.gettransfer.presentation.screenelements.Payment
+import com.kg.gettransfer.presentation.screenelements.ProfileScreen
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.TripsScreen
+
+import org.junit.Rule
+import org.junit.Test
 
 class RegressSuite : TestCase(
     Kaspresso.Builder.default().apply {

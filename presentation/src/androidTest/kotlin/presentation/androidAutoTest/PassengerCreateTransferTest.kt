@@ -14,7 +14,11 @@ import org.junit.Rule
 import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
-import com.kg.gettransfer.presentation.screenelements.*
+import com.kg.gettransfer.presentation.screenelements.OffersScreen
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
 
 class PassengerCreateTransferTest : TestCase(
     Kaspresso.Builder.default().apply {

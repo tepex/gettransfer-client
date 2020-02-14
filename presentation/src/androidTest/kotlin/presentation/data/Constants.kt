@@ -64,4 +64,5 @@ object Constants {
     const val REGEX4LOGIN = """(\d){4}(?=\\r\\n\\t\</p>)"""
     // List number position items
     const val POSITION_THIRD = 3
+    const val SEVEN_SYMBOL = 7
 }
