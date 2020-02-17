@@ -412,7 +412,6 @@
     <string name="LNG_OFFER_NO_LONGER_AVAILABLE">Offer is no longer available</string>
     <string name="LNG_PAYMENT_BALANCE_ERROR">Insufficient funds in your balance to proceed with payment. Please, use another payment method</string>
 
-    <string name="LNG_CHAT_NO_LONGER_AVAILABLE">Chat is no longer available</string>
     <string name="LNG_DROP_OFF_AT_THE_DIFF_LOC">Drop off at the different location</string>
 
     <string name="LNG_RIDE_CHILDREN">Child seats</string>

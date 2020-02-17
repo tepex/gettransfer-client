@@ -10,8 +10,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 import java.text.DateFormat
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 @Serializable
@@ -177,26 +175,5 @@ fun TransferEntity.map(transportTypes: List<TransportType>, dateFormat: DateForm
         editableFields,
         airlineCard,
         unreadMessagesCount,
-        allowOfferInfo(dateFormat.parse(dateReturnLocal ?: dateToLocal)),
         lastOffersUpdatedAt?.let { dateFormat.parse(it) }
     )
-
-fun TransferEntity.allowOfferInfo(date: Date): Boolean =
-    @Suppress("ComplexCondition")
-    if (status != Transfer.Status.NEW.name.toLowerCase() &&
-        status != Transfer.Status.CANCELED.name.toLowerCase() &&
-        status != Transfer.Status.OUTDATED.name.toLowerCase() &&
-        status != Transfer.Status.PERFORMED.name.toLowerCase()
-    ) {
-
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.MINUTE, time ?: duration?.times(MINUTES_PER_HOUR) ?: 0)
-        calendar.add(Calendar.MINUTE, MINUTES_TO_SHOWING_OFFER_INFO)
-        calendar.time.after(Calendar.getInstance().time)
-    } else {
-        status == Transfer.Status.PERFORMED.name.toLowerCase()
-    }
-
-const val MINUTES_PER_HOUR = 60
-const val MINUTES_TO_SHOWING_OFFER_INFO = 24 * MINUTES_PER_HOUR

@@ -109,23 +109,21 @@ class TransferDetailsPresenter : BasePresenter<TransferDetailsView>(), Coordinat
 
     private suspend fun getOffer() {
         setOffer(transferId)?.let { found ->
-            if (transferModel.status.checkOffers) {
+            if (transferModel.status.offerMatched) {
                 offer = found
                 updateRatingState()
             }
         } ?: run { viewState.setBookNowOfferInfo(transferModel.isBookNow()) }
     }
 
-    private suspend fun setOffer(transferId: Long) = fetchData { offerInteractor.getOffers(transferId) }
-        ?.let { list ->
+    private suspend fun setOffer(transferId: Long) =
+        fetchData { offerInteractor.getOffers(transferId) }?.let { list ->
             if (list.size == 1) {
                 val offer = list.first()
                 offerModel = offer.map()
                 reviewInteractor.offerRateID = offer.id
-                if (transferModel.showOfferInfo) {
-                    viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)
-                    viewState.setBookNowOfferInfo(false)
-                }
+                viewState.setOffer(offerModel, transferModel.countChilds, transferModel.unreadMessagesCount)
+                viewState.setBookNowOfferInfo(false)
                 offer
             } else {
                 null
