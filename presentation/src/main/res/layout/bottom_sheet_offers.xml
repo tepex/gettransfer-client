@@ -83,14 +83,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/bottom_sheet_offer_details_margin_16dp"
+                android:layout_marginEnd="@dimen/margin1"
                 android:layout_marginTop="@dimen/bottom_sheet_offer_details_vehicle_name_margin_top"
                 android:maxLines="3"
                 android:textSize="@dimen/bottom_sheet_offer_details_text_size_15sp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@+id/limitTimeInfo"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constrainedWidth="true"
+                app:layout_constraintTop_toBottomOf="@+id/limitTimeInfo"
                 tools:text="Ma best Mercedes" />
 
             <TextView

@@ -357,7 +357,7 @@
 	<dimen name="bottom_sheet_offer_details_text_size_15sp">15sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_12sp">12sp</dimen>
 	<dimen name="bottom_sheet_offer_details_text_size_11sp">11sp</dimen>
-	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">22dp</dimen>
+	<dimen name="bottom_sheet_offer_details_vehicle_name_margin_top">8dp</dimen>
 	<dimen name="bottom_sheet_offer_details_vehicle_icons_margin_top">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_10dp">16dp</dimen>
 	<dimen name="bottom_sheet_offer_details_margin_16dp">16dp</dimen>
