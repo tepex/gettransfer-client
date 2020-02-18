@@ -475,18 +475,29 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         }
         if (orderInteractor.isAutoChangePassengers) {
             transportTypes?.let { list ->
-                list.filter { it.checked }.map { it.id }.any { TransportType.BIG_TRANSPORT.indexOf(it) >= 0 }
-                    .also { isBigTransport ->
-                        val pax = if (isBigTransport) {
-                            DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
-                        } else {
-                            DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
-                        }
-                        orderInteractor.passengers = pax
-                        viewState.setPassengers(pax)
-                    }
+                val hasBigTypes = hasTransportType(list, TransportType.BIG_TRANSPORT)
+                val hasBusTypes = hasTransportType(list, TransportType.BUS_TRANSPORT)
+                val pax = when {
+                    hasBigTypes -> DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT
+                    hasBusTypes -> DEFAULT_BUS_PASSENGER_COUNT
+                    else -> DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT
+                }
+                orderInteractor.passengers = pax
+                viewState.setPassengers(pax)
             }
         }
+    }
+
+    /**
+     * Checks if list of [transportTypes] contains one of [specificTypes] of transport
+     */
+    private fun hasTransportType(
+        transportTypes: List<TransportTypeModel>,
+        specificTypes: List<TransportType.ID>
+    ): Boolean {
+        return transportTypes.filter { it.checked }
+            .map { it.id }
+            .any { specificTypes.contains(it) }
     }
 
     fun onCenterRouteClick() {
@@ -622,6 +633,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         const val MIN_PASSENGERS = 1
         private const val DEFAULT_SMALL_TRANSPORT_PASSENGER_COUNT = 2
         private const val DEFAULT_BIG_TRANSPORT_PASSENGER_COUNT = 4
+        private const val DEFAULT_BUS_PASSENGER_COUNT = 8
         private const val CENTS = 100
     }
 }
