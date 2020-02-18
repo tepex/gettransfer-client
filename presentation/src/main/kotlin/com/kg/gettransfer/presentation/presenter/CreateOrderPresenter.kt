@@ -491,14 +491,8 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     /**
      * Checks if list of [transportTypes] contains one of [specificTypes] of transport
      */
-    private fun hasTransportType(
-        transportTypes: List<TransportTypeModel>,
-        specificTypes: List<TransportType.ID>
-    ): Boolean {
-        return transportTypes.filter { it.checked }
-            .map { it.id }
-            .any { specificTypes.contains(it) }
-    }
+    private fun hasTransportType(transportTypes: List<TransportTypeModel>, specificTypes: List<TransportType.ID>) =
+        transportTypes.filter { it.checked }.map { it.id }.any { specificTypes.contains(it) }
 
     fun onCenterRouteClick() {
         track?.let { viewState.centerRoute(it) }
