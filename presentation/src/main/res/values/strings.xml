@@ -167,6 +167,7 @@
     <string name="LNG_TRANSPORT_COMFORT">Comfort</string>
     <string name="LNG_TRANSPORT_PREMIUM">Premium</string>
     <string name="LNG_TRANSPORT_SUV">Suv</string>
+    <string name="LNG_TRANSPORT_VAN">Van</string>
     <string name="LNG_TRANSPORT_MINIBUS">Minibus</string>
     <string name="LNG_TRANSPORT_BUS">Bus</string>
     <string name="LNG_TRANSPORT_HELICOPTER">Helicopter</string>
