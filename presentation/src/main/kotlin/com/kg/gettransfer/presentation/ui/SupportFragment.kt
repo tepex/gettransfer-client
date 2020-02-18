@@ -71,20 +71,12 @@ class SupportFragment : BaseFragment(), SupportView {
         fabViber.setOnClickListener { viberClick() }
         fabTelegram.setOnClickListener { telegramClick() }
         fabEmail.setOnClickListener { presenter.sendEmail(transferId) }
-    }
-
-    /**
-     * Add views to layout after fragment started
-     */
-    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator {
-        return FragmentUtils.onCreateAnimation(requireContext(), enter) {
-            cyPhone.setOnClickListener { callPhone(cyPhone) }
-            gbPhone.setOnClickListener { callPhone(gbPhone) }
-            hkPhone.setOnClickListener { callPhone(hkPhone) }
-            ruPhone.setOnClickListener { callPhone(ruPhone) }
-            swPhone.setOnClickListener { callPhone(swPhone) }
-            usPhone1.setOnClickListener { callPhone(usPhone1) }
-        }
+        cyPhone.setOnClickListener { callPhone(cyPhone) }
+        gbPhone.setOnClickListener { callPhone(gbPhone) }
+        hkPhone.setOnClickListener { callPhone(hkPhone) }
+        ruPhone.setOnClickListener { callPhone(ruPhone) }
+        swPhone.setOnClickListener { callPhone(swPhone) }
+        usPhone1.setOnClickListener { callPhone(usPhone1) }
     }
 
     private fun callPhone(tv: ContactsView) = presenter.callPhone(tv.tvPhone.text.toString())
