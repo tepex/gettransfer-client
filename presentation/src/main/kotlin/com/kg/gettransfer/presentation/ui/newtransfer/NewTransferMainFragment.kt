@@ -95,7 +95,7 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
     }
 
     private fun scrollDownContent() {
-        scrollContent.post { scrollContent.fullScroll(View.FOCUS_DOWN) }
+        scrollContent?.let { it.post { it.fullScroll(View.FOCUS_DOWN) } }
     }
 
     /**
