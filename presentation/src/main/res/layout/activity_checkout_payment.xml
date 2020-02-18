@@ -22,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,57 +31,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/payButton"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/checkoutcom_pay_button_height"
-                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
-                android:layout_marginTop="@dimen/checkoutcom_pay_button_margin_top"
-                android:layout_marginEnd="@dimen/checkoutcom_horizontal_margins_16"
-                android:background="@drawable/btn_bg_checkoutcom_pay"
-                android:fontFamily="@font/helvetica_neue"
-                android:text="@string/LNG_CHECKOUT_PAY"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/checkoutcom_texts_size"
-                app:layout_constraintTop_toBottomOf="@+id/cardInfo" />
-
-            <ImageView
-                android:id="@+id/imgLock"
+            <TextView
+                android:id="@+id/tvSecure"
+                style="@style/helvetica_neue_black_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
                 android:layout_marginTop="@dimen/checkoutcom_img_lock_margin_top"
-                android:src="@drawable/ic_security"
+                android:text="@string/LNG_CHECKOUT_SECURE_LABEL"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
-                android:fontFamily="@font/helvetica_neue"
-                android:text="@string/LNG_CHECKOUT_SECURE_LABEL"
-                android:textColor="#808080"
-                android:textSize="@dimen/checkoutcom_secure_payment_text_size"
-                app:layout_constraintBottom_toBottomOf="@+id/imgLock"
-                app:layout_constraintStart_toEndOf="@+id/imgLock"
-                app:layout_constraintTop_toTopOf="@+id/imgLock" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/checkoutcom_currency_warning_margin_top"
-                android:layout_marginBottom="@dimen/checkoutcom_currency_warning_margin_bottom"
-                android:fontFamily="@font/helvetica_neue"
-                android:gravity="center_horizontal"
-                android:text="@string/LNG_CHECKOUT_CURRENCY_WARNING"
-                android:textColor="#808080"
-                android:textSize="@dimen/checkoutcom_texts_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/payButton"
-                app:layout_constraintStart_toStartOf="@+id/payButton"
-                app:layout_constraintTop_toBottomOf="@+id/payButton" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cardInfo"
@@ -91,7 +54,7 @@
                 android:paddingStart="@dimen/checkoutcom_horizontal_margins_16"
                 android:paddingEnd="@dimen/checkoutcom_horizontal_margins_16"
                 android:paddingBottom="@dimen/checkoutcom_payment_form_margin_bottom"
-                app:layout_constraintTop_toBottomOf="@+id/imgLock">
+                app:layout_constraintTop_toBottomOf="@+id/tvSecure">
 
                 <ImageView
                     android:id="@+id/cardTypeIcon"
@@ -104,30 +67,36 @@
 
                 <TextView
                     android:id="@+id/paidSum"
+                    style="@style/helvetica_neue_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/checkoutcom_paid_sum_margin_start"
-                    android:layout_marginTop="@dimen/checkoutcom_paid_sum_margin_top"
-                    android:fontFamily="@font/helvetica_neue"
-                    android:textColor="@color/colorTextBlack"
+                    android:layout_marginTop="@dimen/margin5"
                     android:textSize="@dimen/checkoutcom_paid_sum_text_size"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toEndOf="@+id/payingText"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/payingText"
+                    app:layout_constraintTop_toBottomOf="@+id/payingText"
                     tools:text="€4 950,00" />
 
                 <TextView
                     android:id="@+id/payingText"
+                    style="@style/sf_font_pro_display_regular_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/checkoutcom_paid_text_margin_start"
-                    android:fontFamily="@font/helvetica_neue"
+                    android:layout_marginTop="@dimen/checkoutcom_paid_sum_margin_top"
                     android:text="@string/LNG_CHECKOUT_PAYING"
-                    android:textColor="@color/colorTextBlack"
-                    android:textSize="@dimen/checkoutcom_texts_size"
-                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
+                    android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/paidSum" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
+                    app:layout_constraintEnd_toStartOf="@+id/cardTypeIcon"
+                    app:layout_constraintTop_toTopOf="@+id/paidSum"
+                    app:srcCompat="@drawable/ic_visa_2" />
 
 
                 <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
@@ -166,6 +135,184 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/payButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/btn_rounded_height"
+                android:layout_marginStart="@dimen/checkoutcom_horizontal_margins_16"
+                android:layout_marginTop="@dimen/checkoutcom_pay_button_margin_top"
+                android:layout_marginEnd="@dimen/checkoutcom_horizontal_margins_16"
+                android:fontFamily="@font/helvetica_neue"
+                android:text="@string/LNG_CHECKOUT_PAY"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/checkoutcom_texts_size"
+                app:backgroundTint="@color/color_gtr_green"
+                app:cornerRadius="@dimen/btn_radius"
+                app:layout_constraintTop_toBottomOf="@+id/cardInfo" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin24"
+                android:layout_marginTop="@dimen/checkoutcom_currency_warning_margin_top"
+                android:layout_marginEnd="@dimen/margin24"
+                android:fontFamily="@font/helvetica_neue"
+                android:gravity="center_horizontal"
+                android:text="@string/LNG_CHECKOUT_CURRENCY_WARNING"
+                android:textColor="@color/checkoutcom_hint_color"
+                android:textSize="@dimen/checkoutcom_texts_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/payButton" />
+
+            <TextView
+                android:id="@+id/tvAccept"
+                style="@style/helvetica_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin24"
+                android:text="@string/LNG_CHECKOUT_WE_ACCEPT"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivMastercard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin16"
+                android:layout_marginTop="@dimen/margin12"
+                android:elevation="@dimen/payment_method_elevation"
+                app:layout_constraintEnd_toStartOf="@+id/ivMaestro"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvAccept">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_mastercard_bg_rounded" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivMaestro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/payment_method_elevation"
+                app:layout_constraintBottom_toBottomOf="@+id/ivMastercard"
+                app:layout_constraintEnd_toStartOf="@+id/ivVisaBg"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivMastercard"
+                app:layout_constraintTop_toTopOf="@+id/ivMastercard">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_maestro_bg_rounded" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivVisaBg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/payment_method_elevation"
+                app:layout_constraintBottom_toBottomOf="@+id/ivMaestro"
+                app:layout_constraintEnd_toStartOf="@+id/ivAmex"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivMaestro"
+                app:layout_constraintTop_toTopOf="@+id/ivMaestro">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_visa_bg_rounded" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivAmex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/payment_method_elevation"
+                app:layout_constraintBottom_toBottomOf="@+id/ivVisaBg"
+                app:layout_constraintEnd_toStartOf="@+id/ivDiscover"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivVisaBg"
+                app:layout_constraintTop_toTopOf="@+id/ivVisaBg">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_amex_bg_rounded" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivDiscover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin16"
+                android:elevation="@dimen/payment_method_elevation"
+                app:layout_constraintBottom_toBottomOf="@+id/ivAmex"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivAmex"
+                app:layout_constraintTop_toTopOf="@+id/ivAmex">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_discover_bg_rounded" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvSecured"
+                style="@style/helvetica_regular_black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin24"
+                android:text="@string/LNG_CHECKOUT_SECURED"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="@+id/ivMasterSecure"
+                app:layout_constraintStart_toStartOf="@+id/ivPci"
+                app:layout_constraintTop_toBottomOf="@+id/ivMastercard" />
+
+            <ImageView
+                android:id="@+id/ivPci"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin32"
+                android:layout_marginBottom="@dimen/margin64"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivVisaSecure"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvSecured"
+                app:srcCompat="@drawable/ic_pci_dss" />
+
+            <ImageView
+                android:id="@+id/ivVisaSecure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/ivPci"
+                app:layout_constraintEnd_toStartOf="@+id/ivMasterSecure"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivPci"
+                app:layout_constraintTop_toTopOf="@+id/ivPci"
+                app:srcCompat="@drawable/ic_visa_secure" />
+
+            <ImageView
+                android:id="@+id/ivMasterSecure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/ivVisaSecure"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/ivVisaSecure"
+                app:layout_constraintTop_toTopOf="@+id/ivVisaSecure"
+                app:srcCompat="@drawable/ic_mastercard_secure" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -174,7 +321,7 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -453,4 +453,7 @@
 
     <string name="LNG_LIMITED_TIME_OFFER">LIMITED\nTIME OFFER</string>
     <string name="LNG_OFFER_AVAILABLE_UNTIL">Offer is available until\n%s</string>
+
+    <string name="LNG_CHECKOUT_WE_ACCEPT">We accept</string>
+    <string name="LNG_CHECKOUT_SECURED">Secured</string>
 </resources>
