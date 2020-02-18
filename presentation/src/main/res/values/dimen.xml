@@ -460,11 +460,13 @@
 	<dimen name="margin5">5dp</dimen>
 	<dimen name="margin8">8dp</dimen>
 	<dimen name="margin10">10dp</dimen>
-	<dimen name="margin44">44dp</dimen>
+	<dimen name="margin12">12dp</dimen>
 	<dimen name="margin16">16dp</dimen>
 	<dimen name="margin20">20dp</dimen>
 	<dimen name="margin24">24dp</dimen>
 	<dimen name="margin32">32dp</dimen>
+	<dimen name="margin44">44dp</dimen>
+	<dimen name="margin64">64dp</dimen>
 	<dimen name="margin104">104dp</dimen>
 
 	<!--new settings-->
@@ -782,7 +784,6 @@
 	<dimen name="cancelation_request_dialog_button_restore_margin_top">10dp</dimen>
 
 	<!-- Checkoutcom paying screen -->
-	<dimen name="checkoutcom_secure_payment_text_size">16sp</dimen>
 	<dimen name="checkoutcom_paid_text_margin_start">4dp</dimen>
 	<dimen name="checkoutcom_paid_sum_text_size">24sp</dimen>
 	<dimen name="checkoutcom_texts_size">14sp</dimen>
@@ -799,9 +800,9 @@
 	<dimen name="checkoutcom_card_number_margin_top">32dp</dimen>
 	<dimen name="checkoutcom_card_date_margin_top">24dp</dimen>
 	<dimen name="checkoutcom_card_date_and_svs_horizontal_margin">8dp</dimen>
-	<dimen name="checkoutcom_pay_button_height">48dp</dimen>
 	<dimen name="checkoutcom_pay_button_margin_top">24dp</dimen>
 	<dimen name="checkoutcom_currency_warning_margin_top">16dp</dimen>
 	<dimen name="checkoutcom_currency_warning_margin_bottom">24dp</dimen>
+	<dimen name="payment_method_elevation">5dp</dimen>
 
 </resources>
