@@ -24,7 +24,7 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
     val isEnabledButtonDone
         get() = pinCode.length == pinItemsCount
 
-    private lateinit var timerBtnResendCode: CountDownTimer
+    private var timerBtnResendCode: CountDownTimer? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -103,11 +103,11 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
 
     private fun setTimer() {
         viewState.startTimer()
-        timerBtnResendCode.start()
+        timerBtnResendCode?.start()
     }
 
     private fun cancelTimer() {
-        timerBtnResendCode.cancel()
+        timerBtnResendCode?.cancel()
     }
 
     fun back() {
