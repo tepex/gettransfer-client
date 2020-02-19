@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
@@ -117,10 +118,10 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         super.initUi(savedInstanceState)
         comment = arguments?.getString(EXTRA_COMMENT) ?: ""
         etComment.setText(comment)
-        addChipsForHits()
+        addChipsForHints()
     }
 
-    private fun addChipsForHits() {
+    private fun addChipsForHints() {
         val hints = arguments?.getStringArray(EXTRA_HINTS)
         if (!hints.isNullOrEmpty()) {
             for (hint in hints) {
@@ -131,11 +132,19 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
                 chip.text = hint
                 chip.isClickable = true
                 chip.isCheckable = true
-                chip.setTextAppearance(R.style.ChipTextAppearance)
+                setTextAppearance(chip)
                 chip.setChipMinHeightResource(R.dimen.comment_hint_height)
                 chip.setOnClickListener { hintClick(chip.text.toString(), it) }
                 chipGroup.addView(chip)
             }
+        }
+    }
+
+    private fun setTextAppearance(chip: Chip) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            chip.setTextAppearance(R.style.ChipTextAppearance)
+        } else {
+            chip.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_gtr_grey))
         }
     }
 
