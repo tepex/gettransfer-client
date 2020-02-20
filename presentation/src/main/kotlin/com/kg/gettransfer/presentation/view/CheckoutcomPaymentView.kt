@@ -1,5 +1,6 @@
 package com.kg.gettransfer.presentation.view
 
+import androidx.annotation.DrawableRes
 import moxy.viewstate.strategy.OneExecutionStateStrategy
 import moxy.viewstate.strategy.StateStrategyType
 
@@ -8,7 +9,7 @@ interface CheckoutcomPaymentView : BaseView {
 
     fun setCardNumberLength(length: Int)
     fun setCVCLength(length: Int)
-    fun setCardTypeIcon(iconResId: Int)
+    fun setCardTypeIcon(@DrawableRes iconResId: Int)
 
     fun redirectTo3ds(redirectUrl: String)
 

@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.presenter
 
 import com.checkout.android_sdk.Utils.CardUtils
 import com.checkout.android_sdk.Utils.Environment
+import com.kg.gettransfer.R
 
 import com.kg.gettransfer.domain.model.CheckoutcomTokenRequest
 import com.kg.gettransfer.domain.model.PaymentProcess
@@ -30,7 +31,7 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
             cardLength = cardType.cardLength
             maxCVCLength = cardType.maxCvvLength
             viewState.setCVCLength(cardType.maxCvvLength)
-            viewState.setCardTypeIcon(cardType.resourceId)
+            setCardType(cardNumber)
         }
 
     var cardMonth = ""
@@ -46,6 +47,18 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
 
         viewState.setCVCLength(maxCVCLength)
     }
+
+    private fun setCardType(cardNUmber: String) {
+        when (CardUtils.getType(cardNUmber)) {
+            CardUtils.Cards.AMEX -> viewState.setCardTypeIcon(R.drawable.ic_amex)
+            CardUtils.Cards.DISCOVER -> viewState.setCardTypeIcon(R.drawable.ic_discover)
+            CardUtils.Cards.MAESTRO -> viewState.setCardTypeIcon(R.drawable.ic_maestro)
+            CardUtils.Cards.MASTERCARD -> viewState.setCardTypeIcon(R.drawable.ic_master_card)
+            CardUtils.Cards.VISA -> viewState.setCardTypeIcon(R.drawable.ic_visa_2)
+            else -> viewState.setCardTypeIcon(0)
+        }
+    }
+
 
     fun onPayButtonPressed() {
         if (!cardInfoDataIsValid()) return

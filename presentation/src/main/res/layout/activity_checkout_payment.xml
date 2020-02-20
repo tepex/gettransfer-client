@@ -59,22 +59,24 @@
                 <ImageView
                     android:id="@+id/cardTypeIcon"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/checkoutcom_img_card_type_height"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin32"
+                    app:layout_constraintBottom_toTopOf="@+id/cardNumber"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/paidSum" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:srcCompat="@drawable/ic_maestro" />
 
                 <TextView
                     android:id="@+id/paidSum"
                     style="@style/helvetica_neue_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin5"
                     android:textSize="@dimen/checkoutcom_paid_sum_text_size"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/cardTypeIcon"
                     app:layout_constraintStart_toStartOf="@+id/payingText"
-                    app:layout_constraintTop_toBottomOf="@+id/payingText"
+                    app:layout_constraintTop_toTopOf="@+id/cardTypeIcon"
                     tools:text="€4 950,00" />
 
                 <TextView
@@ -83,21 +85,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/checkoutcom_paid_text_margin_start"
-                    android:layout_marginTop="@dimen/checkoutcom_paid_sum_margin_top"
+                    android:layout_marginBottom="@dimen/margin5"
                     android:text="@string/LNG_CHECKOUT_PAYING"
                     android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/paidSum"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/ivV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
-                    app:layout_constraintEnd_toStartOf="@+id/cardTypeIcon"
-                    app:layout_constraintTop_toTopOf="@+id/paidSum"
-                    app:srcCompat="@drawable/ic_visa_2" />
-
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
                     android:id="@+id/cardNumber"
