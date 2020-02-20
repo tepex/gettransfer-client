@@ -144,7 +144,7 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
             val offersResult = utils.asyncAwait { offerInteractor.getOffers(transferId) }
             if (offersResult.error == null && offersResult.model.size == 1) {
                 val offer = offersResult.model.first()
-                if (offer.isRateAvailable() && offer.isNeededRateOffer()) {
+                if (offer.isRateAvailable()) {
                     rateOffer(offer, rate)
                 }
             }
