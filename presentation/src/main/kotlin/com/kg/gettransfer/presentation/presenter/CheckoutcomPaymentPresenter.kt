@@ -30,7 +30,7 @@ class CheckoutcomPaymentPresenter : BaseCardPaymentPresenter<CheckoutcomPaymentV
             cardLength = cardType.cardLength
             maxCVCLength = cardType.maxCvvLength
             viewState.setCVCLength(cardType.maxCvvLength)
-            viewState.setCardTypeIcon(cardType.resourceId)
+            viewState.setCardTypeIcon(cardType)
         }
 
     var cardMonth = ""

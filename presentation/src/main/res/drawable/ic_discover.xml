@@ -5,14 +5,6 @@
     android:viewportWidth="64"
     android:viewportHeight="40">
   <path
-      android:pathData="M64,23S46.695,34.744 15,40h49V23"
-      android:fillColor="#F46F1B"
-      android:fillType="nonZero"/>
-  <path
-      android:pathData="M63.538,0.454v39.093L0.462,39.547L0.46,0.455h63.078L63.538,0.453zM63.768,0L0,0.006L0,40h64l-0.004,-40h-0.228z"
-      android:fillColor="#000"
-      android:fillType="nonZero"/>
-  <path
       android:pathData="M58.002,15.821a0.81,0.81 0,0 1,-0.803 -0.82c0,-0.457 0.357,-0.821 0.803,-0.821 0.439,0 0.797,0.373 0.797,0.821a0.81,0.81 0,0 1,-0.797 0.82zM58.006,14A1.001,1.001 0,1 0,59 15c0,-0.548 -0.448,-1 -0.994,-1z"
       android:fillColor="#000"
       android:fillType="nonZero"/>
@@ -28,7 +20,7 @@
       android:pathData="M32.803,18.364m-4.342,0a4.342,4.342 0,1 1,8.684 0a4.342,4.342 0,1 1,-8.684 0"
       android:fillType="nonZero">
     <aapt:attr name="android:fillColor">
-      <gradient 
+      <gradient
           android:gradientRadius="6.982314"
           android:centerX="3.3881943"
           android:centerY="-25.591139"

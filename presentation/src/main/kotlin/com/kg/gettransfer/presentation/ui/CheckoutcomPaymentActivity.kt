@@ -10,12 +10,13 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 
 import com.checkout.android_sdk.Utils.AfterTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
+import com.checkout.android_sdk.Utils.CardUtils.Cards
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -107,8 +108,10 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         if (cvcText.length > length) cardCVC.text = cvcText.substring(0, length)
     }
 
-    override fun setCardTypeIcon(iconResId: Int) {
-        cardTypeIcon.setImageDrawable(if (iconResId == 0) null else ContextCompat.getDrawable(this, iconResId))
+    override fun setCardTypeIcon(cardType: Cards) {
+        CheckoutcomPaymentView.CARD_MAP[cardType]?.let { cardTypeIcon.setImageResource(it) } ?: run {
+            cardTypeIcon.isInvisible = true
+        }
     }
 
     override fun redirectTo3ds(redirectUrl: String) {
