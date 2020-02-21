@@ -16,6 +16,7 @@ import androidx.core.widget.addTextChangedListener
 
 import com.checkout.android_sdk.Utils.AfterTextChangedListener
 import com.checkout.android_sdk.Utils.CardUtils
+import com.checkout.android_sdk.Utils.CardUtils.Cards
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
@@ -107,9 +108,10 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         if (cvcText.length > length) cardCVC.text = cvcText.substring(0, length)
     }
 
-    override fun setCardTypeIcon(iconResId: Int) {
-        if (iconResId == 0) cardTypeIcon.isInvisible = true
-        else cardTypeIcon.setImageResource(iconResId)
+    override fun setCardTypeIcon(cardType: Cards) {
+        CheckoutcomPaymentView.CARD_MAP[cardType]?.let { cardTypeIcon.setImageResource(it) } ?: run {
+            cardTypeIcon.isInvisible = true
+        }
     }
 
     override fun redirectTo3ds(redirectUrl: String) {
