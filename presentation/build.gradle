@@ -30,7 +30,7 @@ ext {
     multidex_version           = "2.0.1"
     constraint_layout_version  = "2.0.0-beta1" // don't update version until content_payment_successful.xml preview will be work fine
     moxy_version               = "2.0.2"
-    cicerone_version           = "5.0.0"
+    cicerone_version           = "5.1.0"
     circle_indicator_version   = "1.2.2"
     firebase_core_version      = "17.2.1"
     firebase_iid_version       = "17.0.4"

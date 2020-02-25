@@ -65,7 +65,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
                     .typeface = semiboldFontRes
             }
         })
-        fragmentManager?.let { loginPager.adapter = LoginPagerAdapter(it) }
+        loginPager.adapter = LoginPagerAdapter(parentFragmentManager)
 
         setToolbar()
 
