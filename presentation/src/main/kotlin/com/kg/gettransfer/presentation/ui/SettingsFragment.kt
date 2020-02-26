@@ -2,6 +2,7 @@ package com.kg.gettransfer.presentation.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +61,7 @@ class SettingsFragment : BaseFragment(), KoinComponent, SettingsView {
     }
 
     override fun recreate() {
-        requireActivity().recreate()
+        Handler().postDelayed({ requireActivity().recreate() }, 0)
     }
 
     override fun setBalance(balance: String?) {
