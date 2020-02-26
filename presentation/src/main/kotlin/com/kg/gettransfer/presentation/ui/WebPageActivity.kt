@@ -61,9 +61,8 @@ class WebPageActivity : MvpAppCompatActivity(), WebPageView {
         initWebView()
     }
 
-    @CallSuper
-    override fun onResume() {
-        super.onResume()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         navigatorHolder.setNavigator(navigator)
     }
 

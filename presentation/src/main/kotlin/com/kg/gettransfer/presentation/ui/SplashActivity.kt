@@ -81,9 +81,8 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         }
     }
 
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         navigatorHolder.setNavigator(navigator)
         if (updateAppDialogIsShowed) {
             presenter.startApp()

@@ -48,7 +48,7 @@ object Screens {
 
     data class MainPassenger(val showAbout: Boolean = false) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainNavigateActivity::class.java).apply {
             putExtra(SHOW_ABOUT, showAbout)
         }
     }
@@ -58,7 +58,7 @@ object Screens {
         val rate: Int
     ) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainNavigateActivity::class.java).apply {
             putExtra(EXTRA_RATE_TRANSFER_ID, transferId)
             putExtra(EXTRA_RATE_VALUE, rate)
         }
@@ -68,31 +68,31 @@ object Screens {
         val errorResId: Int
     ) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainNavigateActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainNavigateActivity::class.java).apply {
             putExtra(EXTRA_ERROR_RES_ID, errorResId)
         }
     }
 
     object Requests : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, RequestsPagerActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, RequestsPagerActivity::class.java)
     }
 
     object LicenceAgree : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, WebPageActivity()::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, WebPageActivity()::class.java).apply {
             putExtra(WebPageView.EXTRA_SCREEN, WebPageView.SCREEN_LICENSE)
         }
     }
 
     object CreateOrder : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, CreateOrderActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, CreateOrderActivity::class.java)
     }
 
     open class MainLogin(val nextScreen: String, val emailOrPhone: String?) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -111,22 +111,22 @@ object Screens {
 
     open class ProfileSettings : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, ProfileSettingsActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, ProfileSettingsActivity::class.java)
     }
 
     open class ChangeEmail : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangeEmailActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, SettingsChangeEmailActivity::class.java)
     }
 
     open class ChangePhone : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePhoneActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, SettingsChangePhoneActivity::class.java)
     }
 
     open class ChangePassword : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, SettingsChangePasswordActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, SettingsChangePasswordActivity::class.java)
     }
 
     open class SmsCode(
@@ -144,7 +144,7 @@ object Screens {
 
     data class LoginToGetOffers(val transferId: Long, val email: String?) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -156,7 +156,7 @@ object Screens {
 
     data class LoginToShowDetails(val transferId: Long) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -172,7 +172,7 @@ object Screens {
         val bookNowTransportId: String?
     ) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -189,7 +189,7 @@ object Screens {
 
     data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -201,7 +201,7 @@ object Screens {
 
     data class LoginToDownloadVoucher(val transferId: Long) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -213,7 +213,7 @@ object Screens {
 
     data class LoginToChat(val transferId: Long) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(context, MainLoginActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
@@ -224,26 +224,26 @@ object Screens {
     }
 
     data class Offers(val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, OffersActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, OffersActivity::class.java).apply {
             putExtra(OffersView.EXTRA_TRANSFER_ID, transferId)
         }
     }
 
     data class Details(val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, TransferDetailsActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, TransferDetailsActivity::class.java).apply {
             putExtra(TransferDetailsView.EXTRA_TRANSFER_ID, transferId)
         }
     }
 
     data class Chat(val transferId: Long) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, ChatActivity::class.java).apply {
+        override fun getActivityIntent(context: Context) = Intent(context, ChatActivity::class.java).apply {
             putExtra(ChatView.EXTRA_TRANSFER_ID, transferId)
         }
     }
 
     data class PlatronPayment(val url: String) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(context, PlatronPaymentActivity::class.java).apply {
                 putExtra(PlatronPaymentView.EXTRA_URL, url)
             }
@@ -251,7 +251,7 @@ object Screens {
 
     data class CheckoutcomPayment(val paymentId: Long, val amountFormatted: String) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(context, CheckoutcomPaymentActivity::class.java).apply {
                 putExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, paymentId)
                 putExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED, amountFormatted)
@@ -259,7 +259,7 @@ object Screens {
     }
 
     class PaymentOffer : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) = Intent(context, PaymentOfferActivity::class.java)
+        override fun getActivityIntent(context: Context) = Intent(context, PaymentOfferActivity::class.java)
     }
 
     data class PaymentError(
@@ -279,7 +279,7 @@ object Screens {
     }
 
     data class PaymentSuccess(val transferId: Long, val offerId: Long?) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(context, PaymentSuccessfulActivity::class.java).apply {
                 putExtra(PaymentSuccessfulView.EXTRA_TRANSFER_ID, transferId)
                 putExtra(PaymentSuccessfulView.EXTRA_OFFER_ID, offerId)
@@ -293,7 +293,7 @@ object Screens {
     ) : SupportAppScreen() {
 
         @Suppress("UnsafeCallOnNullableType")
-        override fun getActivityIntent(context: Context?): Intent? {
+        override fun getActivityIntent(context: Context): Intent? {
             val emailSelectorIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse(EMAIL_DATA)
             }
@@ -333,7 +333,7 @@ object Screens {
 
     class Share : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) = Intent(Intent.ACTION_SEND).apply {
+        override fun getActivityIntent(context: Context) = Intent(Intent.ACTION_SEND).apply {
             putExtra(
                 Intent.EXTRA_TEXT,
                 context?.getString(
@@ -346,7 +346,7 @@ object Screens {
     }
 
     data class CallPhone(val phoneCarrier: String) : SupportAppScreen() {
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(Intent.ACTION_DIAL, Uri.fromParts(DIAL_SCHEME, phoneCarrier, null))
     }
 
@@ -369,7 +369,7 @@ object Screens {
         val offerId: Long?
     ) : SupportAppScreen() {
 
-        override fun getActivityIntent(context: Context?) =
+        override fun getActivityIntent(context: Context) =
             Intent(context, PaypalConnectionActivity::class.java).apply {
                 putExtra(PaypalConnectionView.EXTRA_PAYMENT_ID, paymentId)
                 putExtra(PaypalConnectionView.EXTRA_NONCE, nonce)

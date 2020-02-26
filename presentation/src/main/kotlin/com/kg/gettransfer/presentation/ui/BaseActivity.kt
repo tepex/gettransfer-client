@@ -241,9 +241,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         registerReceiver(inetReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
 
-    @CallSuper
-    protected override fun onResume() {
-        super.onResume()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         navigatorHolder.setNavigator(baseNavigator)
     }
 

@@ -36,7 +36,7 @@ import ru.terrakok.cicerone.Router
 @Suppress("UnsafeCast")
 class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
 
-    private val router by inject<Router>()
+    private val router: Router by inject()
     private lateinit var params: String
     private var nextScreen = ""
 
@@ -65,7 +65,7 @@ class AuthorizationPagerFragment : MvpAppCompatFragment(), KoinComponent {
                     .typeface = semiboldFontRes
             }
         })
-        fragmentManager?.let { loginPager.adapter = LoginPagerAdapter(it) }
+        loginPager.adapter = LoginPagerAdapter(parentFragmentManager)
 
         setToolbar()
 

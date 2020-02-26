@@ -58,10 +58,14 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
         presenter.showLoginFragment(intent.getStringExtra(LogInView.EXTRA_PARAMS))
     }
 
-    @CallSuper
-    override fun onResume() {
-        super.onResume()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
         navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        navigatorHolder.removeNavigator()
+        super.onPause()
     }
 
     override fun onBackPressed() {
