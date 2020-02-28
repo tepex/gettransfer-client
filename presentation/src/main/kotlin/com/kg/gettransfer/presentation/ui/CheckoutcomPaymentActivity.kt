@@ -109,9 +109,10 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
     }
 
     override fun setCardTypeIcon(cardType: Cards) {
-        CheckoutcomPaymentView.CARD_MAP[cardType]?.let { cardTypeIcon.setImageResource(it) } ?: run {
-            cardTypeIcon.isInvisible = true
-        }
+        CheckoutcomPaymentView.CARD_MAP[cardType]?.let {
+            cardTypeIcon.isVisible = true
+            cardTypeIcon.setImageResource(it)
+        } ?: run { cardTypeIcon.isInvisible = true }
     }
 
     override fun redirectTo3ds(redirectUrl: String) {
