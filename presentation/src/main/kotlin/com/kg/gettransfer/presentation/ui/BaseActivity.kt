@@ -51,6 +51,7 @@ import com.kg.gettransfer.domain.interactor.SessionInteractor
 
 import com.kg.gettransfer.extensions.hideKeyboard
 import androidx.core.view.isVisible
+import com.kg.gettransfer.extensions.setStatusBarColor
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.model.TitleModel
@@ -230,6 +231,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
             localeManager.updateResources(this, sessionInteractor.locale)
         }
+        setStatusBarColor(R.color.colorWhite)
     }
 
     @CallSuper
@@ -433,14 +435,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     open fun thanksForRate() {}
 
     protected fun closePopUp() = popupWindowRate.dismiss()
-
-    protected fun setStatusBarColor(@ColorRes color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, color)
-        }
-    }
 
     protected fun copyText(text: String) {
         val systemService = getSystemService(Context.CLIPBOARD_SERVICE)

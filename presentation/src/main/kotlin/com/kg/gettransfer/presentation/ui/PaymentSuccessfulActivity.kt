@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.kg.gettransfer.R
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.kg.gettransfer.extensions.setStatusBarColor
 import com.kg.gettransfer.presentation.listeners.GoToPlayMarketListener
 import com.kg.gettransfer.presentation.model.PolylineModel
 import com.kg.gettransfer.presentation.presenter.PaymentSuccessfulPresenter

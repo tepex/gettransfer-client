@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 
 import androidx.annotation.CallSuper
-import androidx.annotation.ColorRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 import moxy.MvpAppCompatActivity
@@ -16,6 +14,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setStatusBarColor
 
 import com.kg.gettransfer.presentation.presenter.SplashPresenter
 import com.kg.gettransfer.presentation.view.Screens
@@ -115,10 +114,6 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         } else {
             false
         }
-    }
-
-    private fun setStatusBarColor(@ColorRes color: Int) {
-        window.statusBarColor = ContextCompat.getColor(this, color)
     }
 
     override fun onDestroy() {

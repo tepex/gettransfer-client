@@ -2,11 +2,19 @@ package com.kg.gettransfer.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.view.View
+import android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+
+import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+
+import com.kg.gettransfer.R
 
 fun Fragment.hideKeyboard() {
     requireActivity().hideKeyboard(requireView())
@@ -51,4 +59,24 @@ fun View.setThrottledClickListener(delay: Long = 500L, clickListener: ((View) ->
             }
         }
     } ?: setOnClickListener(null)
+}
+
+fun AppCompatActivity.setStatusBarColor(@ColorRes color: Int) {
+    if (color == R.color.colorWhite) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.statusBarColor = ContextCompat.getColor(this, color)
+        } else {
+            window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
+        }
+    } else {
+        window.statusBarColor = ContextCompat.getColor(this, color)
+    }
+}
+
+fun AppCompatActivity.setTransparentStatusBar() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        window.statusBarColor = Color.TRANSPARENT
+    } else {
+        window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
+    }
 }
