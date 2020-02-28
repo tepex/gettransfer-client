@@ -56,7 +56,6 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_checkout_payment)
         presenter.paymentId = intent.getLongExtra(CheckoutcomPaymentView.EXTRA_PAYMENT_ID, 0L)
-
         setToolbar(toolbar, TitleModel.Id(R.string.LNG_PAYMENT))
         setPrice(intent.getStringExtra(CheckoutcomPaymentView.EXTRA_AMOUNT_FORMATTED) ?: "")
         cardDate.setMaxLength(CARD_DATE_LENGTH)

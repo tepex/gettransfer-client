@@ -52,7 +52,6 @@ class PlatronPaymentActivity : BaseActivity(), PlatronPaymentView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_platron_payment)
         setToolbar(toolbar, TitleModel.Id(R.string.LNG_PAYMENT))
-
         hideKeyboard()
         initWebView()
     }

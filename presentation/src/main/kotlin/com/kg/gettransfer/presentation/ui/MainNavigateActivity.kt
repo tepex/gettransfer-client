@@ -1,12 +1,9 @@
 package com.kg.gettransfer.presentation.ui
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.core.view.isVisible
@@ -16,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.extensions.setTransparentStatusBar
 
 import com.kg.gettransfer.extensions.setupWithNavController
 
@@ -61,13 +59,7 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_navigate)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.statusBarColor = Color.TRANSPARENT
-        } else {
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        }
-
+        setTransparentStatusBar()
         getIntents(intent)
 
         if (savedInstanceState == null) {

@@ -14,6 +14,7 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.domain.interactor.SessionInteractor
+import com.kg.gettransfer.extensions.setStatusBarColor
 
 import com.kg.gettransfer.presentation.presenter.MainLoginPresenter
 
@@ -55,6 +56,7 @@ class MainLoginActivity : MvpAppCompatActivity(), MainLoginView, KoinComponent {
             localeManager.updateResources(this, sessionInteractor.locale)
         }
         setContentView(R.layout.activity_user_login)
+        setStatusBarColor(R.color.colorWhite)
         presenter.showLoginFragment(intent.getStringExtra(LogInView.EXTRA_PARAMS))
     }
 

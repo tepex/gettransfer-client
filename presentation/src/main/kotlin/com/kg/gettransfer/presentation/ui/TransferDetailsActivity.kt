@@ -3,14 +3,12 @@ package com.kg.gettransfer.presentation.ui
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager
 
 import androidx.annotation.CallSuper
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -132,7 +130,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
         window.setBackgroundDrawable(null)
         presenter.transferId = intent.getLongExtra(TransferDetailsView.EXTRA_TRANSFER_ID, 0)
         setContentView(R.layout.activity_transfer_details)
-        setupStatusBar()
         setToolbar(toolbar, TitleModel.Id(R.string.LNG_TRIP_DETAILS))
 
         @Suppress("UnsafeCast")
@@ -153,14 +150,6 @@ class TransferDetailsActivity : BaseGoogleMapActivity(),
             if (isMapMovingByUser) {
                 mapCollapseBehavior.setLatLngBounds(gm.projection.visibleRegion.latLngBounds)
             }
-        }
-    }
-
-    private fun setupStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhite)
         }
     }
 
