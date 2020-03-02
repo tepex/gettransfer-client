@@ -9,6 +9,7 @@ import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
+import com.kg.gettransfer.extensions.setStatusBarColor
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 
@@ -34,6 +35,7 @@ class HandleUrlActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handle_url)
+        setStatusBarColor(R.color.colorPrimary)
         if (intent?.action == Intent.ACTION_VIEW) {
             intent.data?.let { presenter.handleIntent(it) }
         }
