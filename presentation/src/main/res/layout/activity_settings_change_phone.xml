@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:background="@color/colorWhite"
-                android:inputType="phone"
+                android:inputType="numberSigned"
                 android:paddingStart="@dimen/change_contact_screen_fields_vertical_padding"
                 android:paddingEnd="@dimen/change_contact_screen_fields_vertical_padding"
                 app:account_field_view_divider_visible="false"
