@@ -52,9 +52,8 @@ class OneSignalNotificationOpenedHandler(
     private val paymentInteractor: PaymentInteractor by inject()
 
     override fun notificationOpened(result: OSNotificationOpenResult) {
-        result.notification.payload.launchURL?.let { url ->
-            checkUrlData(url.toUri())
-        } ?: openMainActivity()
+        val targetUrl = result.notification.payload.additionalData.getString(TARGET_URL)
+        checkUrlData(targetUrl.toUri())
     }
 
     @Suppress("ComplexMethod")
@@ -179,5 +178,9 @@ class OneSignalNotificationOpenedHandler(
             extras?.let { putExtras(it) }
         }
         application.startActivity(intent)
+    }
+
+    companion object {
+        const val TARGET_URL = "targetUrl"
     }
 }

@@ -31,10 +31,6 @@
             android:value="${assetlinks}" />
 
         <meta-data
-            android:name="com.onesignal.NotificationOpened.DEFAULT"
-            android:value="DISABLE" />
-
-        <meta-data
             android:name="com.onesignal.NotificationAccentColor.DEFAULT"
             android:value="FF000000" />
 
