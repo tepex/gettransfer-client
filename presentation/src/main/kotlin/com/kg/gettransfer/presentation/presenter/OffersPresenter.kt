@@ -19,9 +19,9 @@ import com.kg.gettransfer.presentation.view.OffersView.Sort
 import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
+import com.kg.gettransfer.utilities.OneSignalNotificationManager
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
@@ -29,6 +29,9 @@ import org.koin.core.parameter.parametersOf
 @Suppress("TooManyFunctions")
 @InjectViewState
 class OffersPresenter : BasePresenter<OffersView>() {
+
+    private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
+    private val notificationManager: OneSignalNotificationManager by inject()
 
     internal var transferId = 0L
 
@@ -38,8 +41,6 @@ class OffersPresenter : BasePresenter<OffersView>() {
     private var sortCategory = Sort.PRICE
     private var sortHigherToLower = false
     var isViewRoot: Boolean = false
-
-    private val worker: WorkerManager by inject { parametersOf("OffersPresenter") }
 
     override fun attachView(view: OffersView) {
         super.attachView(view)
@@ -97,32 +98,28 @@ class OffersPresenter : BasePresenter<OffersView>() {
         fetchResult(WITHOUT_ERROR, withCacheCheck = false, checkLoginError = false) {
             offerInteractor.getOffers(transfer.id)
         }.also { result ->
-            if (result.error == null && transfer.offersUpdatedAt != null) {
-                fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
-            }
-            if (result.error != null && !result.fromCache) {
-                offers = emptyList()
-            } else {
-                offers = mutableListOf<OfferItem>().apply {
-                    addAll(result.model)
-                    notificationManager.clearNotifications(result.model.map { offer -> offer.id.toInt() })
-                    addAll(transfer.bookNowOffers)
+            if (result.error == null) {
+                notificationManager.clearOfferNotifications(transferId)
+                if (transfer.offersUpdatedAt != null) {
+                    fetchResultOnly { transferInteractor.setOffersUpdatedDate(transfer.id) }
                 }
             }
+            offers = result.hasData()?.let { offers ->
+                mutableListOf<OfferItem>().apply {
+                    addAll(offers)
+                    addAll(transfer.bookNowOffers)
+                }
+            } ?: emptyList()
         }
         processOffers()
     }
 
-    override suspend fun onNewOffer(offer: Offer): OfferModel {
-        val offerModel = super.onNewOffer(offer)
-        if (transferId != offer.transferId) {
-            return offerModel
-        }
+    override suspend fun onNewOffer(offer: Offer) {
+        if (transferId != offer.transferId) return
         if (!checkDuplicated(offer)) {
             offers = offers.toMutableList().apply { add(offer) }
         }
         processOffers()
-        return offerModel
     }
 
     private fun checkDuplicated(offer: Offer): Boolean {

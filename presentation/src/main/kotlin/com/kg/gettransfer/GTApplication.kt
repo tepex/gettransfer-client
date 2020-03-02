@@ -1,12 +1,6 @@
 package com.kg.gettransfer
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.os.Build
-
 import androidx.annotation.CallSuper
-import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
 
@@ -14,7 +8,6 @@ import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 
 import com.google.firebase.FirebaseApp
-import com.google.firebase.messaging.FirebaseMessaging
 
 import com.kg.gettransfer.cache.cacheModule
 import com.kg.gettransfer.data.dataModule
@@ -22,13 +15,13 @@ import com.kg.gettransfer.di.*
 
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
+import com.kg.gettransfer.service.OneSignalNotificationOpenedHandler
 
 import com.kg.gettransfer.sys.cache.systemCache
 import com.kg.gettransfer.sys.data.systemData
 import com.kg.gettransfer.sys.remote.systemRemote
 
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
-import com.kg.gettransfer.utilities.GTNotificationManager
 
 import com.onesignal.OneSignal
 
@@ -92,7 +85,7 @@ class GTApplication : MultiDexApplication() {
             ))
         }
 
-        setupFcm()
+        setupFirebase()
         setupAppMetrica()
         setupSentry()
         setupAppsFlyer()
@@ -118,6 +111,7 @@ class GTApplication : MultiDexApplication() {
         }
         // OneSignal Initialization
         OneSignal.startInit(this)
+            .setNotificationOpenedHandler(OneSignalNotificationOpenedHandler(this))
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
             .unsubscribeWhenNotificationsAreDisabled(true)
             .init()
@@ -157,48 +151,7 @@ class GTApplication : MultiDexApplication() {
         YandexMetrica.enableActivityAutoTracking(this)
     }
 
-    private fun setupFcm() {
+    private fun setupFirebase() {
         FirebaseApp.initializeApp(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(
-                getString(R.string.new_offer_notification_channel_id),
-                getString(R.string.new_offer_notification_channel_name)
-            )
-            createNotificationChannel(GTNotificationManager.OFFER_CHANEL_ID)
-            createNotificationChannel(GTNotificationManager.MESSAGE_CHANEL_ID)
-        }
-
-        Timber.d("Subscribing to new offers")
-        FirebaseMessaging.getInstance().subscribeToTopic("offers").addOnCompleteListener { subscribed ->
-            Timber.d("subscribed: ${subscribed.isSuccessful}")
-
-            /*
-            // Get token
-            FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener(OnCompleteListener {
-                if (!it.isSuccessful) {
-                    Timber.w("getInstanceId failed", it.exception)
-                    return@OnCompleteListener
-                }
-                Timber.d("[FCM token]: ${it.result?.token}")
-            })
-            */
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(chanelId: String, chanelName: String? = null) {
-        val name = chanelName ?: when (chanelId) {
-            GTNotificationManager.OFFER_CHANEL_ID   -> getString(R.string.offer_channel_name)
-            GTNotificationManager.MESSAGE_CHANEL_ID -> getString(R.string.message_channel_name)
-            else              -> throw UnsupportedOperationException()
-        }
-        val importance = NotificationManager.IMPORTANCE_HIGH
-        val channel = NotificationChannel(chanelId, name, importance).apply {
-            setShowBadge(true)
-            lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-        }
-
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager?.createNotificationChannel(channel)
     }
 }

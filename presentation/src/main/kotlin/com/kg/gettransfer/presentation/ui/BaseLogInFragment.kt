@@ -6,7 +6,6 @@ import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.presenter.BaseLogInPresenter
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import io.sentry.Sentry
 import io.sentry.event.BreadcrumbBuilder
@@ -51,7 +50,7 @@ abstract class BaseLogInFragment : MvpAppCompatFragment(),
             EasyPermissions.requestPermissions(
                 this,
                 getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_QUESTION),
-                BaseHandleUrlView.RC_WRITE_FILE, *perms
+                RC_WRITE_FILE, *perms
             )
         }
     }
@@ -110,5 +109,9 @@ abstract class BaseLogInFragment : MvpAppCompatFragment(),
         if (block) {
             if (useSpinner) showLoading()
         } else hideLoading()
+    }
+
+    companion object {
+        const val RC_WRITE_FILE = 111
     }
 }

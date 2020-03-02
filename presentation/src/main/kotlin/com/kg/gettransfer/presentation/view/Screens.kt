@@ -55,7 +55,7 @@ object Screens {
 
     data class MainPassengerToRateTransfer(
         val transferId: Long,
-        val rate: Int
+        val rate: Int?
     ) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context) = Intent(context, MainNavigateActivity::class.java).apply {
@@ -187,13 +187,13 @@ object Screens {
         }
     }
 
-    data class LoginToRateTransfer(val transferId: Long, val rate: Int) : SupportAppScreen() {
+    data class LoginToRateTransfer(val transferId: Long, val rate: Int?) : SupportAppScreen() {
 
         override fun getActivityIntent(context: Context) = Intent(context, MainLoginActivity::class.java).apply {
             putExtra(LogInView.EXTRA_PARAMS,
                 JSON.stringify(
                     LogInView.Params.serializer(),
-                    LogInView.Params(Screens.RATE_TRANSFER, transferId, rate = rate)
+                    LogInView.Params(Screens.RATE_TRANSFER, transferId, rate = rate ?: 0)
                 )
             )
         }

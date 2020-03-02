@@ -30,6 +30,14 @@
             android:name="asset_statements"
             android:value="${assetlinks}" />
 
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="FF000000" />
+
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -41,12 +49,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_offer_notification" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
@@ -284,9 +286,9 @@
         </provider>
 
         <service
-            android:name=".service.FirebaseManager">
+            android:name="com.appsflyer.FirebaseMessagingServiceListener">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 

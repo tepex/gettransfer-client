@@ -1,5 +1,5 @@
 package com.kg.gettransfer.presentation.view
 
-interface OpenDeepLinkScreenView : BaseHandleUrlView {
+interface OpenDeepLinkScreenView : BaseView {
     fun downloadVoucher()
 }

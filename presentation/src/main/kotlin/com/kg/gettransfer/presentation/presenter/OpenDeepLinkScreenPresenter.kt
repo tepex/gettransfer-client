@@ -56,7 +56,7 @@ open class OpenDeepLinkScreenPresenter<BV : OpenDeepLinkScreenView> : BaseHandle
         }
     }
 
-    suspend fun rateTransfer(transferId: Long, rate: Int) {
+    suspend fun rateTransfer(transferId: Long, rate: Int?) {
         checkTransfer(transferId).isSuccess()?.let { transfer ->
             router.newRootScreen(Screens.MainPassengerToRateTransfer(transfer.id, rate))
         }

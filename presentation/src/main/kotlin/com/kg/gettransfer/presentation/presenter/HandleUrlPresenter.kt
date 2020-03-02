@@ -4,100 +4,32 @@ import android.net.Uri
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.extensions.createStartChain
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.AUTH_KEY
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.CHOOSE_OFFER_ID
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.EQUAL
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.FROM_PLACE_ID
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_PASSWORD
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.NEW_TRANSFER
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.OPEN_CHAT
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_CABINET
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PARTNER_RATE
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_CABINET
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PASSENGER_RATE
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.PROMO_CODE
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.QUESTION
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.RATE
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.SLASH
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TO_PLACE_ID
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.TRANSFERS
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.VOUCHER
-import com.kg.gettransfer.presentation.view.HandleUrlView
+import com.kg.gettransfer.presentation.model.DeeplinkScreenModel
+import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 import com.kg.gettransfer.presentation.view.Screens
+import com.kg.gettransfer.utilities.DeeplinkManager
 
 import kotlinx.coroutines.launch
 
 import moxy.InjectViewState
+import org.koin.core.inject
 
-/** TODO: refactor to regular expressions */
 @InjectViewState
-class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
+class HandleUrlPresenter : OpenDeepLinkScreenPresenter<OpenDeepLinkScreenView>() {
 
-    lateinit var url: String
+    private val deeplinkManager: DeeplinkManager by inject()
 
-    @Suppress("ComplexMethod")
     fun handleIntent(appLinkData: Uri) {
-        url = appLinkData.toString()
-        appLinkData.path?.let { path ->
-            when {
-                path == PASSENGER_CABINET || path == PARTNER_CABINET ->
-                    appLinkData.fragment?.let { checkPassengerCabinetUrl(it) }
-                path.startsWith(PASSENGER_RATE) || path.startsWith(PARTNER_RATE) ->
-                    checkPassengerRateUrl(appLinkData)
-                path.contains(VOUCHER) -> {
-                    transferId = appLinkData.lastPathSegment?.toLongOrNull()
-                    transferId?.let { openVoucherLink(it) }
-                }
-                path.contains(NEW_TRANSFER) -> createOrder(
-                    appLinkData.getQueryParameter(FROM_PLACE_ID),
-                    appLinkData.getQueryParameter(TO_PLACE_ID),
-                    appLinkData.getQueryParameter(PROMO_CODE)
-                )
-                path.startsWith(NEW_PASSWORD) ->
-                    openNewPasswordLink(appLinkData.getQueryParameter(AUTH_KEY))
-                else -> showWebView()
-            }
-        }
-    }
-
-    private fun checkPassengerCabinetUrl(fragment: String) {
-        if (fragment.startsWith(TRANSFERS)) {
-            if (fragment.contains(CHOOSE_OFFER_ID)) {
-                checkChooseOfferIdUrl(fragment)
-                return
-            } else if (fragment.contains(OPEN_CHAT)) {
-                checkOpenChatUrl(fragment)
-                return
-            }
-            val transferId = fragment.substring(fragment.indexOf(SLASH) + 1).toLongOrNull()
-            transferId?.let { openTransferLink(it) } ?: showWebView()
-        } else {
-            showWebView()
-        }
-    }
-
-    private fun checkChooseOfferIdUrl(fragment: String) {
-        val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-        val offerId = fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length).toLongOrNull()
-        val bookNowTransportId =
-            if (offerId == null) {
-                fragment.substring(fragment.lastIndexOf(EQUAL) + 1, fragment.length)
-            } else {
-                null
-            }
-        transferId?.let { id -> openOfferLink(id, offerId, bookNowTransportId) }
-    }
-
-    private fun checkOpenChatUrl(fragment: String) {
-        val transferId = fragment.substring(fragment.indexOf(SLASH) + 1, fragment.indexOf(QUESTION)).toLongOrNull()
-        transferId?.let { openChatLink(it) }
-    }
-
-    private fun checkPassengerRateUrl(appLinkData: Uri) {
-        val transferId = appLinkData.lastPathSegment?.toLongOrNull()
-        val rate = appLinkData.getQueryParameter(RATE)?.toIntOrNull()
-        if (transferId != null && rate != null) {
-            openRateTransferLink(transferId, rate)
+        when (val screen = deeplinkManager.getScreenForLink(appLinkData)) {
+            is DeeplinkScreenModel.PaymentOffer ->
+                openOfferLink(screen.transferId, screen.offerId, screen.bookNowOfferId)
+            is DeeplinkScreenModel.Chat -> openChatLink(screen.transferId)
+            is DeeplinkScreenModel.Transfer -> openTransferLink(screen.transferId)
+            is DeeplinkScreenModel.RateTransfer -> openRateTransferLink(screen.transferId, screen.rate)
+            is DeeplinkScreenModel.DownloadVoucher -> openVoucherLink(screen.transferId)
+            is DeeplinkScreenModel.CreateOrder -> createOrder(screen.fromPlaceId, screen.toPlaceId, screen.promo)
+            is DeeplinkScreenModel.NewPassword -> openNewPasswordLink(screen.authKey)
+            is DeeplinkScreenModel.Main -> openMainScreen()
         }
     }
 
@@ -128,7 +60,7 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
         }
     }
 
-    private fun openRateTransferLink(transferId: Long, rate: Int) = worker.main.launch {
+    private fun openRateTransferLink(transferId: Long, rate: Int?) = worker.main.launch {
         checkInitialization()
         if (!accountManager.isLoggedIn) {
             router.createStartChain(Screens.LoginToRateTransfer(transferId, rate))
@@ -165,9 +97,5 @@ class HandleUrlPresenter : OpenDeepLinkScreenPresenter<HandleUrlView>() {
 
     private fun openProfileSettings() {
         router.createStartChain(Screens.ProfileSettings())
-    }
-
-    private fun showWebView() {
-        viewState.showWebView(url)
     }
 }

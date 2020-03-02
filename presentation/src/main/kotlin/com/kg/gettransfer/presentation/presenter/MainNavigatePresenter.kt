@@ -11,7 +11,6 @@ import com.kg.gettransfer.domain.model.Offer
 import com.kg.gettransfer.domain.model.Transfer
 import com.kg.gettransfer.domain.model.Transfer.Companion.filterRateable
 
-import com.kg.gettransfer.presentation.model.OfferModel
 import com.kg.gettransfer.presentation.model.map
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.sys.domain.GetPreferencesInteractor
@@ -104,9 +103,8 @@ class MainNavigatePresenter : BasePresenter<MainNavigateView>(), CounterEventLis
         }
     }
 
-    override suspend fun onNewOffer(offer: Offer): OfferModel {
+    override suspend fun onNewOffer(offer: Offer) {
         viewState.setEventCount(accountManager.hasAccount, countEventsInteractor.eventsCount)
-        return super.onNewOffer(offer)
     }
 
     private suspend fun checkReview(transfers: List<Transfer>) =

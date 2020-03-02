@@ -1,27 +1,17 @@
 package com.kg.gettransfer.presentation.ui
 
-import android.annotation.TargetApi
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.annotation.CallSuper
-
-import android.webkit.WebViewClient
-import android.webkit.WebView
-import android.webkit.WebResourceRequest
 
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 import com.kg.gettransfer.R
 import com.kg.gettransfer.domain.ApiException
-import androidx.core.view.isVisible
-import com.kg.gettransfer.extensions.setUserAgent
+import com.kg.gettransfer.extensions.setStatusBarColor
 import com.kg.gettransfer.presentation.presenter.HandleUrlPresenter
-import com.kg.gettransfer.presentation.view.HandleUrlView
-import com.kg.gettransfer.presentation.view.BaseHandleUrlView.Companion.RC_WRITE_FILE
-
-import kotlinx.android.synthetic.main.activity_handle_url.*
+import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
 
 import org.jetbrains.anko.longToast
 
@@ -29,7 +19,7 @@ import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
 class HandleUrlActivity : BaseActivity(),
-    HandleUrlView,
+    OpenDeepLinkScreenView,
     EasyPermissions.PermissionCallbacks,
     EasyPermissions.RationaleCallbacks {
 
@@ -45,6 +35,7 @@ class HandleUrlActivity : BaseActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handle_url)
+        setStatusBarColor(R.color.colorPrimary)
         if (intent?.action == Intent.ACTION_VIEW) {
             intent.data?.let { presenter.handleIntent(it) }
         }
@@ -101,23 +92,7 @@ class HandleUrlActivity : BaseActivity(),
         longToast(getString(R.string.LNG_DOWNLOAD_BOOKING_VOUCHER_ACCESS))
     }
 
-    override fun showWebView(url: String) {
-        splashLayout.isVisible = false
-        webView.settings.javaScriptEnabled = true
-        webView.setUserAgent()
-        webView.webViewClient = object : WebViewClient() {
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                view?.loadUrl(request?.url.toString())
-                return true
-            }
-
-            // for pre-lollipop
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                view?.loadUrl(url)
-                return true
-            }
-        }
-        webView.loadUrl(url)
+    companion object {
+        const val RC_WRITE_FILE = 111
     }
 }
