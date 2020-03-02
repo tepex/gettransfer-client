@@ -9,8 +9,8 @@ import org.koin.core.KoinComponent
 class OneSignalNotificationManager(val context: Context) : ContextWrapper(context), KoinComponent {
 
     companion object {
-        const val OFFER_CHANEL_POSTFIX   = "_offer"
-        const val MESSAGE_CHANEL_POSTFIX = "_message"
+        const val OFFER_CHANEL_POSTFIX   = "_offers"
+        const val MESSAGE_CHANEL_POSTFIX = "_messages"
     }
 
     fun clearOfferNotifications(transferId: Long) = clearGroup(transferId, OFFER_CHANEL_POSTFIX)
