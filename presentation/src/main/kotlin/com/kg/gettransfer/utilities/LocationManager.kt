@@ -128,24 +128,26 @@ class LocationManager(val context: Context) : KoinComponent {
     }
 
     fun checkPermission(activity: Activity): Boolean {
-        val hasPermission = EasyPermissions.hasPermissions(context, *PERMISSIONS)
+        val hasPermission = EasyPermissions.hasPermissions(activity, *PERMISSIONS)
         if (!hasPermission) {
             EasyPermissions.requestPermissions(
                 activity,
                 context.getString(R.string.LNG_LOCATION_ACCESS),
-                RC_LOCATION, *PERMISSIONS
+                RC_LOCATION,
+                *PERMISSIONS
             )
         }
         return hasPermission
     }
 
     fun checkPermission(fragment: Fragment): Boolean {
-        val hasPermission = EasyPermissions.hasPermissions(context, *PERMISSIONS)
+        val hasPermission = EasyPermissions.hasPermissions(fragment.requireContext(), *PERMISSIONS)
         if (!hasPermission) {
             EasyPermissions.requestPermissions(
                 fragment,
                 context.getString(R.string.LNG_LOCATION_ACCESS),
-                RC_LOCATION, *PERMISSIONS
+                RC_LOCATION,
+                *PERMISSIONS
             )
         }
         return hasPermission

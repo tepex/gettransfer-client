@@ -39,7 +39,6 @@ import moxy.presenter.ProvidePresenter
 
 import org.jetbrains.anko.find
 
-import pub.devrel.easypermissions.EasyPermissions
 
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
@@ -117,12 +116,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
 
     private fun rateTransfer(transferId: Long, rate: Int) {
         if (transferId != 0L) presenter.rateTransfer(transferId, rate)
-    }
-
-    @CallSuper
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
     override fun showRateForLastTrip(transferId: Long, vehicle: String, color: String) {

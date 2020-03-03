@@ -184,7 +184,6 @@ class NewTransferMainFragment : BaseFragment(), NewTransferMainView {
         ReadMoreFragment().show(parentFragmentManager, getString(R.string.tag_read_more))
     }
 
-    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
