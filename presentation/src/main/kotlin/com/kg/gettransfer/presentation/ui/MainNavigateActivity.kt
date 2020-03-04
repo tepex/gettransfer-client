@@ -67,17 +67,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
         } // Else, need to wait for onRestoreInstanceState
     }
 
-    override fun onPause() {
-        super.onPause()
-        // TODO temporary solution
-        (currentNavController?.value?.currentDestination as? FragmentNavigator.Destination)?.let { currentDest ->
-            val backToMain =
-                currentDest.className == NewTransferMapFragment::class.java.name ||
-                currentDest.className == SearchFragment::class.java.name
-            if (backToMain) currentNavController?.value?.navigateUp()
-        }
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         getIntents(intent)
