@@ -5,6 +5,8 @@ import com.kg.gettransfer.domain.model.Message
 import com.kg.gettransfer.domain.model.Result
 
 interface ChatRepository {
+    val openedChatTransferId: Long?
+
     suspend fun getChatRemote(transferId: Long): Result<Chat>
     suspend fun getChatCached(transferId: Long): Result<Chat>
 

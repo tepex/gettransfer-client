@@ -27,6 +27,8 @@ class ChatRepositoryImpl(
     private val chatDataStoreIO: ChatSocketDataStoreOutput
 ) : BaseRepository(), ChatRepository {
 
+    override var openedChatTransferId: Long? = null
+
     private val chatReceiver: ChatInteractor by inject()
     private val dateFormat = get<ThreadLocal<DateFormat>>(named("iso_date"))
 
@@ -60,12 +62,16 @@ class ChatRepositoryImpl(
     }
 
     override fun onJoinRoom(transferId: Long): Result<Unit> {
+        openedChatTransferId = transferId
         chatDataStoreIO.onJoinRoomEmit(transferId)
         sendMessageFromQueue(transferId)
         return Result(Unit)
     }
 
-    override fun onLeaveRoom(transferId: Long) = chatDataStoreIO.onLeaveRoomEmit(transferId)
+    override fun onLeaveRoom(transferId: Long) {
+        openedChatTransferId = null
+        chatDataStoreIO.onLeaveRoomEmit(transferId)
+    }
 
     override fun onSendMessage(message: Message): Result<Unit> {
         factory.retrieveCacheDataStore().newMessageToCache(message.map(dateFormat.get()))

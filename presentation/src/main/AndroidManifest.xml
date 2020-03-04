@@ -308,6 +308,15 @@
         </receiver>
 
         <service android:name="com.yandex.metrica.push.firebase.MetricaMessagingService" tools:node="remove"/>
+
+        <service
+            android:name=".service.OneSignalNotificationsExtender"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
