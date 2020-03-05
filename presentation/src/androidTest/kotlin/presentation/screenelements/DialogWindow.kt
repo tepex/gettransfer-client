@@ -11,6 +11,6 @@ object DialogWindow : Screen<DialogWindow>() {
         withId(R.id.button1)
         withText("OK")
     }
-    val msgNoTransport = KTextView { withText("Please select transport type") }
-    val msgNoTerms = KTextView { withText("You should accept terms of use") }
+    val msgNoTransport = KTextView { withText(com.kg.gettransfer.R.string.LNG_RIDE_CHOOSE_TRANSPORT) }
+    val msgNoTerms = KTextView { withText(com.kg.gettransfer.R.string.LNG_RIDE_OFFERT_ERROR) }
 }

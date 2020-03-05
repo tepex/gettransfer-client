@@ -6,9 +6,11 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.clearElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
+import androidx.test.espresso.web.webdriver.Locator
 
 import androidx.test.espresso.web.webdriver.Locator.NAME
 import androidx.test.espresso.web.webdriver.Locator.XPATH
+import com.kg.gettransfer.presentation.data.Constants
 
 object PayFun {
 
@@ -39,11 +41,9 @@ object PayFun {
     }
 
     fun goFinPay() {
-        Web.onWebView().withElement(findElement(XPATH, WebPayId.XPAT))
-            .perform(webClick())
+        Web.onWebView().withElement(findElement(XPATH, WebPayId.XPAT)).perform(webClick())
 
-        @Suppress("MagicNumber")
-        Thread.sleep(9_000)
+        Thread.sleep(Constants.big)
         Web.onWebView().withElement(findElement(NAME, WebPayId.threeDone)).perform(webClick())
     }
 }
@@ -56,5 +56,5 @@ object WebPayId {
     const val nameCard = "name_on_card"
     const val userPhone = "user_phone"
     const val threeDone = "threeDSIsDone"
-    const val XPAT = "/html/body/div[1]/div[2]/div/div[2]/form/div[6]/button"
+    const val XPAT = "/html/body/div[1]/div[2]/div/div[2]/form/div[7]/button/span"
 }

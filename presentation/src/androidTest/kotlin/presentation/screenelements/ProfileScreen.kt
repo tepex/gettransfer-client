@@ -9,6 +9,7 @@ import com.agoda.kakao.text.KButton
 import com.kg.gettransfer.R
 
 object ProfileScreen : Screen<ProfileScreen>() {
+    val tvBtnRequestCode = KButton { withId(R.id.btnRequestCode) }
     val logoutBtn = KButton { withId(R.id.btnLogout) }
     val loginBtn = KButton { withId(R.id.btnLogin) }
     val saveBtn = KButton { withId(R.id.btnSave) }
@@ -22,7 +23,7 @@ object ProfileScreen : Screen<ProfileScreen>() {
         isDisplayed()
     }
     val tvPwd = KEditText { withId(R.id.etPassword) }
-    val btnBack = KButton { withContentDescription("Navigate up") }
+    val btnBack = KButton { withId(R.id.toolbar_btnBack) }
     val btnDialogOkButton = KButton { withId(R.id.bottomSheetDialogOkButton) }
     val btnSwitch = KButton { withId(R.id.switchAgreementTb) }
     val btnSignUp = KButton { withId(R.id.btnSignUp) }

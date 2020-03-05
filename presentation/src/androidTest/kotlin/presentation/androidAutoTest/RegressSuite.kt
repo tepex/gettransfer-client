@@ -4,6 +4,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 
 import com.agoda.kakao.screen.Screen
+import com.kaspersky.kaspresso.kaspresso.Kaspresso
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 
@@ -14,17 +15,18 @@ import org.junit.Test
 import com.kg.gettransfer.presentation.data.Constants
 
 import com.kg.gettransfer.presentation.screenelements.*
-import org.junit.Ignore
 
-@Suppress("LongMethod")
-class RegressSuite : TestCase() {
+class RegressSuite : TestCase(
+    Kaspresso.Builder.default().apply {
+        flakySafetyParams.apply {
+            timeoutMs = Constants.big
+        }
+    }
+) {
 
     @Rule
     @JvmField
     var activityTestRule = ActivityTestRule(SplashActivity::class.java)
-
-//    @get:Rule
-//    val screenshotTestRule = ScreenshotTestRule()
 
     @Rule
     @JvmField
@@ -40,14 +42,7 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                BaseFun.goStart()
             }
             step("TakeGeo") {
                 MainScreen {
@@ -59,11 +54,10 @@ class RegressSuite : TestCase() {
                 TransferDetails {
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    val baseFun = BaseFun
-                    baseFun.chooseData()
+                    BaseFun.chooseData()
                     getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    BaseFun.goTransferType()
+                    BaseFun.goSwitchAgreement()
                 }
             }
             step("OpenRequestInfo") {
@@ -72,10 +66,17 @@ class RegressSuite : TestCase() {
                 }
             }
             step("cancelTransfer") {
-                Trips {
+                TripsScreen {
                     tvCancel { click() }
-                    val baseFun = BaseFun
-                    baseFun.okCancel()
+                    BaseFun.okCancel()
+                    step("OpenPastTrips") {
+                        BaseFun.openPastTrips()
+                    }
+                    step("RepeatTransfer") {
+                        TripsScreen {
+                            transferTime { swipeUp() }
+                        }
+                    }
                 }
             }
         }
@@ -88,23 +89,13 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                BaseFun.goStart()
             }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+            step(" Checkout DEV ") {
+                BaseFun.checkoutDev()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePassenger()
             }
             step("GoTrips") {
                 NavBar {
@@ -112,15 +103,19 @@ class RegressSuite : TestCase() {
                 }
             }
             step("OpenPastTrips") {
-                Trips {
-                    Screen.idle(DELAY_BIG)
-                    swRequests { flakySafely(timeoutMs = DELAY_MEDIUM) { swipeLeft() } }
-                    Screen.idle(DELAY_BIG)
-                    requests { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
+                TripsScreen {
+                    recycler {
+                        flakySafely { isVisible() }
+                        swipeLeft()
+                        firstChild<TripsScreen.Item> {
+                            flakySafely { isVisible() }
+                            click()
+                        }
+                    }
                 }
             }
             step("RepeatTransfer") {
-                Trips {
+                TripsScreen {
                     tvRepeat { click() }
                 }
             }
@@ -146,43 +141,39 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                BaseFun.goStart()
             }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+            step(" Checkout DEV ") {
+                BaseFun.checkoutDev()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePartner()
             }
+            Screen.idle(Constants.big)
             step("GoTrips") {
                 NavBar {
                     trips { click() }
                 }
             }
             step("OpenTransfer") {
-                Trips {
-                    Screen.idle(DELAY_BIG)
-                    tvRequestNumber { click() }
+                TripsScreen {
+                    recycler {
+                        flakySafely { isVisible() }
+                        firstChild<TripsScreen.Item> {
+                            flakySafely { isVisible() }
+                            click()
+                        }
+                    }
                 }
             }
             step("OpenChat") {
-                Trips {
+                TripsScreen {
                     tvChat { click() }
                 }
             }
             step("SendMessage") {
                 Chat {
-                    btnMessage { typeText(Constants.TEXT_TEST) }
+                    fieldMessage { typeText(Constants.TEXT_TEST) }
                     btnSend { click() }
                 }
             }
@@ -196,18 +187,14 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                BaseFun.goStart()
             }
+            step(" Checkout DEV ") {
+                BaseFun.checkoutDev()
+            }
+            Screen.idle(Constants.small)
             step("UnLogin") {
-                val baseFun = BaseFun
-                baseFun.unLogin()
+                BaseFun.unLogin()
             }
             step("Verification") {
                 ProfileScreen {
@@ -234,18 +221,13 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                    val baseFun = BaseFun
-                    baseFun.goTransferLater()
-                }
+                BaseFun.goStart()
+            }
+            step(" Checkout DEV ") {
+                BaseFun.checkoutDev()
             }
             step("UnLogin") {
-                val baseFun = BaseFun
-                baseFun.unLogin()
+                BaseFun.unLogin()
             }
             step("Verification") {
                 ProfileScreen {
@@ -278,49 +260,31 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
-            step("GoSettings") {
-                NavBar {
-                    settings { click() }
-                }
+            step(" Checkout DEMO ") {
+                BaseFun.checkoutDemo()
             }
             step("GoLogin") {
-                val baseFun = BaseFun
-                baseFun.goPassLogin()
+                BaseFun.goProfilePartner()
             }
-            step("TakeGeo") {
-                MainScreen {
-                    subTitle { click() }
-                }
-            }
-            step("Locations") {
-                Locations {
-                    tvSearchTo { typeText(Constants.TEXT_PETERSBURG) }
-                    Screen.idle(DELAY_SMALL)
-                    tvSpdAddress { flakySafely(timeoutMs = DELAY_MEDIUM) { click() } }
-                }
-            }
+            Screen.idle(Constants.big)
+            BaseFun. goToSearchScreen()
+            BaseFun.inputAddress()
             step("CreateTransfer") {
                 TransferDetails {
-                    Screen.idle(DELAY_MEDIUM)
+                    Screen.idle(DELAY_VERY_BIG)
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    val baseFun = BaseFun
-                    baseFun.chooseData()
+                    BaseFun.chooseData()
                     getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    BaseFun.goTransferType()
+                    BaseFun.goSwitchAgreement()
                 }
             }
             step("BookNow") {
                 BookNow {
-                    rvOffers { click() }
+                    tvModelCar { click() }
                     Screen.idle(DELAY_SMALL)
                     btnBook { click() }
                     tvBackground { swipeUp() }
@@ -329,8 +293,7 @@ class RegressSuite : TestCase() {
                 }
             }
             step("PayCardFail") {
-                val payFun = PayFun
-                payFun.goFailPayCard()
+                PayFun.goFailPayCard()
             }
             step("FailCheck") {
                 Screen.idle(DELAY_VERY_BIG)
@@ -350,12 +313,7 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("OpenMap") {
                 MainScreen {
@@ -364,6 +322,14 @@ class RegressSuite : TestCase() {
             }
             step("CheckMap") {
                 Locations {
+                    compose {
+                        or(btnNoChangeLng) {
+                            click()
+                        }
+                        or(tvSearchPanel) {
+                            isVisible()
+                        }
+                    }
                     tvSearchPanel { isVisible() }
                     btnNext { click() }
                 }
@@ -378,12 +344,7 @@ class RegressSuite : TestCase() {
         }.run {
             step("GoStart") {
                 Screen.idle(DELAY_BIG)
-                Onboarding {
-                    compose {
-                        or(btnClose) { click() }
-                        or(gtrLogo) { click() }
-                    }
-                }
+                BaseFun.goStart()
             }
             step("OpenWindowHourly") {
                 MainScreen {

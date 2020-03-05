@@ -12,6 +12,13 @@ object OrdersDetails : Screen<OrdersDetails>() {
     val plusPassenger = KView { withId(R.id.img_plus_seat) }
     val btnGetOffers = KView { withId(R.id.btnGetOffers) }
     val transportType = KView { withId(R.id.rvTransferType) }
+    val transportTypeBuisness = KView {
+        withId(R.id.tvTransferType)
+        withText(R.string.LNG_TRANSPORT_BUSINESS)
+        isDescendantOfA {
+            withId(R.id.cardTransferType)
+        }
+    }
     val bottomContent = KView { withId(R.id.scrollContent) }
     val termsOfUse = KView { withId(R.id.switchAgreement) }
     val btnBack = KButton {
