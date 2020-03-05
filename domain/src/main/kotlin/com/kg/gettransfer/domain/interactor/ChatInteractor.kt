@@ -8,6 +8,9 @@ import com.kg.gettransfer.domain.repository.ChatRepository
 
 class ChatInteractor(private val repository: ChatRepository) {
 
+    val openedChatTransferId: Long?
+        get() = repository.openedChatTransferId
+
     var eventChatReceiver: ChatEventListener? = null
     var eventChatBadgeReceiver: ChatBadgeEventListener? = null
 
