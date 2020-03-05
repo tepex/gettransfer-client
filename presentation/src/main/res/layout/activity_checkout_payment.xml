@@ -60,24 +60,10 @@
                     android:id="@+id/cardTypeIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin32"
-                    app:layout_constraintBottom_toTopOf="@+id/cardNumber"
+                    app:layout_constraintBottom_toBottomOf="@+id/paidSum"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintTop_toTopOf="@+id/paidSum"
                     tools:srcCompat="@drawable/ic_maestro" />
-
-                <TextView
-                    android:id="@+id/paidSum"
-                    style="@style/helvetica_neue_black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/checkoutcom_paid_sum_text_size"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/cardTypeIcon"
-                    app:layout_constraintStart_toStartOf="@+id/payingText"
-                    app:layout_constraintTop_toTopOf="@+id/cardTypeIcon"
-                    tools:text="€4 950,00" />
 
                 <TextView
                     android:id="@+id/payingText"
@@ -85,13 +71,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/checkoutcom_paid_text_margin_start"
-                    android:layout_marginBottom="@dimen/margin5"
+                    android:layout_marginTop="@dimen/margin16"
                     android:text="@string/LNG_CHECKOUT_PAYING"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toTopOf="@+id/paidSum"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/paidSum"
+                    style="@style/helvetica_neue_black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin5"
+                    android:textSize="@dimen/checkoutcom_paid_sum_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/payingText"
+                    app:layout_constraintTop_toBottomOf="@+id/payingText"
+                    tools:text="€4 950,00" />
 
                 <com.kg.gettransfer.presentation.ui.custom.CheckoutcomCardFieldView
                     android:id="@+id/cardNumber"
