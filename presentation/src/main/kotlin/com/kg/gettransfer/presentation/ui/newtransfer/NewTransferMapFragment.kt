@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.ui.newtransfer
 
-import android.Manifest
 import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
@@ -124,7 +123,6 @@ class NewTransferMapFragment : BaseMapFragment(), NewTransferMapView {
         presenter.checkPermission(this)
     }
 
-    @CallSuper
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
