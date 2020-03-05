@@ -62,4 +62,8 @@ object Constants {
     const val REGEXDISTANCE = "([\\d]){3}"
     const val REGEXKM = "([a-z]){2,5}"
     const val REGEX4LOGIN = """(\d){4}(?=\\r\\n\\t\</p>)"""
+    // List number position items
+    const val POSITION_FIRST = 1
+    const val POSITION_SECOND = 2
+    const val POSITION_THIRD = 3
 }

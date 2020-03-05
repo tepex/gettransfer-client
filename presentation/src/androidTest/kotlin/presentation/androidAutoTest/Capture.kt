@@ -10,13 +10,13 @@ import com.agoda.kakao.text.KTextView
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 
-class Capture<T : View>(val сlass: Class<T>) : TypeSafeMatcher<View>(View:: class. java) {
+class Capture<T : View>(val klass: Class<T>) : TypeSafeMatcher<View>(View::class.java) {
     var view: T? = null
 
     override fun describeTo(desc: Description) {
     }
     override fun matchesSafely(v: View): Boolean {
-        if (!сlass.isAssignableFrom(v.javaClass)) {
+        if (!klass.isAssignableFrom(v.javaClass)) {
             return false
         }
         this.view = v as T

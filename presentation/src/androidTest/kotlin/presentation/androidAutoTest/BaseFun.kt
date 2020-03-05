@@ -311,13 +311,13 @@ object BaseFun {
     fun checkTips() {
         onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
         onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(1, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_FIRST, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
         onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(2, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_SECOND, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
         onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(3, click()))
+            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_THIRD, click()))
         onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
     }
 

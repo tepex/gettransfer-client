@@ -39,7 +39,6 @@ import moxy.presenter.ProvidePresenter
 
 import org.jetbrains.anko.find
 
-
 @Suppress("TooManyFunctions")
 class MainNavigateActivity : BaseActivity(), MainNavigateView,
         StoreDialogFragment.OnStoreListener, GoToPlayMarketListener {
