@@ -308,17 +308,12 @@ object BaseFun {
         onView(allOf(withId(R.id.btnBack))).perform(click())
     }
 
-    fun checkTips() {
-        onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
-        onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_FIRST, click()))
-        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
-        onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_SECOND, click()))
-        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
-        onView(withId(R.id.rv_popularList))
-            .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(Constants.POSITION_THIRD, click()))
-        onView(allOf(withId(R.id.rv_addressList))).isDisplayed()
+    fun  checkTips() {
+        for (pos in 1..Constants.POSITION_THIRD) {
+            onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
+            onView(withId(R.id.rv_popularList))
+                .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(pos, click()))
+        }
     }
 
     fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
