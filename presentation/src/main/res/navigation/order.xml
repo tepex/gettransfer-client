@@ -50,9 +50,10 @@
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
             app:enterAnim="@anim/transition_b2t"
-            app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
-            app:popExitAnim="@anim/fade_out"/>
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@+id/showNewOrder" />
 
     </fragment>
 
@@ -73,9 +74,10 @@
             android:id="@+id/go_to_create_order"
             app:destination="@id/showCreateOrder"
             app:enterAnim="@anim/transition_b2t"
-            app:popEnterAnim="@anim/fade_in"
             app:exitAnim="@anim/transition_t2b"
-            app:popExitAnim="@anim/fade_out"/>
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@+id/showNewOrder" />
 
         <argument
             android:name="isClickTo"
