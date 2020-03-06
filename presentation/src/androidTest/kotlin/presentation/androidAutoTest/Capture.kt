@@ -15,12 +15,10 @@ class Capture<T : View>(val klass: Class<T>) : TypeSafeMatcher<View>(View::class
 
     override fun describeTo(desc: Description) {
     }
-    override fun matchesSafely(v: View): Boolean {
-        if (!klass.isAssignableFrom(v.javaClass)) {
-            return false
-        }
+
+    override fun matchesSafely(v: View) = if (!klass.isAssignableFrom(v.javaClass)) false else {
         this.view = v as T
-        return true
+        true
     }
     companion object {
         inline operator fun <reified T : View> invoke() = Capture(T::class.java)
