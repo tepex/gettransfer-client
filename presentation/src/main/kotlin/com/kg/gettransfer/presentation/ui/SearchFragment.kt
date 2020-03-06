@@ -142,7 +142,7 @@ class SearchFragment : BaseFragment(), SearchView {
                     presenter.updateDuration(durationValue)
                 }
             })
-            .show(requireFragmentManager(), HourlyDurationDialogFragment.DIALOG_TAG)
+            .show(parentFragmentManager, HourlyDurationDialogFragment.DIALOG_TAG)
     }
 
     override fun setHourlyDuration(duration: Int?) {
