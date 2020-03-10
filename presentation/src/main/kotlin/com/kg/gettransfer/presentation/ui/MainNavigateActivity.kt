@@ -23,7 +23,6 @@ import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragmen
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
-import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_ERROR_RES_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
