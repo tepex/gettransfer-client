@@ -49,7 +49,7 @@ class PassengerCreateTransferTest : TestCase(
                 OrdersDetails {
                     content { swipeUp() }
                     Thread.sleep(Constants.medium)
-                    BaseFun.chooseData()
+                    BaseFun.chooseDate()
                     plusPassenger { click() }
                     btnGetOffers { click() }
                     BaseFun.goTransferType()
