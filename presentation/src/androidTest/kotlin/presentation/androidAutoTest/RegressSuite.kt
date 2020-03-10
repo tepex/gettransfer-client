@@ -53,8 +53,8 @@ class RegressSuite : TestCase(
             step("CreateTransfer") {
                 TransferDetails {
                     typeCars { swipeUp() }
-                    Screen.idle(DELAY_SMALL)
-                    BaseFun.chooseData()
+                    Screen.idle(DELAY_VERY_BIG)
+                    BaseFun.chooseDate()
                     getOffers { click() }
                     BaseFun.goTransferType()
                     BaseFun.goSwitchAgreement()
@@ -125,7 +125,7 @@ class RegressSuite : TestCase(
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
-                    baseFun.chooseData()
+                    baseFun.chooseDate()
                     getOffers { click() }
                     baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
@@ -276,7 +276,7 @@ class RegressSuite : TestCase(
                     Screen.idle(DELAY_VERY_BIG)
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    BaseFun.chooseData()
+                    BaseFun.chooseDate()
                     getOffers { click() }
                     BaseFun.goTransferType()
                     BaseFun.goSwitchAgreement()

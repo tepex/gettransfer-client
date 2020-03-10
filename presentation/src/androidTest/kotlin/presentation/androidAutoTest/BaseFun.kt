@@ -127,9 +127,9 @@ object BaseFun {
     fun goBackToTrips() {
         if (onView(allOf(withId(R.id.btnBack))).isDisplayed()) {
             onView(withId(R.id.btnBack)).perform(click())
-        if (onView(allOf(withId(R.id.btn_back))).isDisplayed()) {
-            onView(withId(R.id.btn_back)).perform(click())
-        }
+            if (onView(allOf(withId(R.id.btn_back))).isDisplayed()) {
+                onView(withId(R.id.btn_back)).perform(click())
+            }
         }
     }
 
@@ -285,7 +285,7 @@ object BaseFun {
         }
     }
 
-    fun chooseData() {
+    fun chooseDate() {
         onView(withId(R.id.transfer_date_time_field)).perform(click())
         Screen.idle(Constants.medium)
         val year = DateHelper().dateFormattedYear
@@ -336,9 +336,16 @@ object BaseFun {
         onView(allOf(withId(R.id.nav_trips))).perform(click())
         onView(allOf(withId(R.id.vpRequests))).perform(swipeLeft())
         Thread.sleep(Constants.big)
-        onView(allOf(withIndex(withId(R.id.requestInfo), 0),
-            isDescendantOfA(withIndex(withId(R.id.rvRequests), 0)),
-            isDisplayed()))
-            .perform(click())
+        TripsScreen {
+            recycler {
+                isVisible()
+                firstChild<TripsScreen.Item> {
+                    isVisible()
+                    click()
+                }
+            }
+        }
     }
 }
+
+

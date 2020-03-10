@@ -65,7 +65,8 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 TransferDetails {
                     Screen.idle(DELAY_VERY_BIG)
                     typeCars { swipeUp() }
-                    BaseFun.chooseData()
+                    Screen.idle(DELAY_VERY_BIG)
+                    BaseFun.chooseDate()
                     getOffers { click() }
                     BaseFun.goTransferType()
                     BaseFun.goSwitchAgreement()
@@ -107,7 +108,7 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                     typeCars { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
-                    baseFun.chooseData()
+                    baseFun.chooseDate()
                     getOffers { click() }
                     baseFun.goTransferType()
                     baseFun.goSwitchAgreement()
@@ -162,7 +163,8 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 TransferDetails {
                     Screen.idle(Constants.medium)
                     typeCars { swipeUp() }
-                    BaseFun.chooseData()
+                    Screen.idle(Constants.medium)
+                    BaseFun.chooseDate()
                     getOffers { click() }
                     BaseFun.goTransferType()
                     BaseFun.goSwitchAgreement()
