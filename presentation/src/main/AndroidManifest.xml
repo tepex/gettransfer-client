@@ -70,7 +70,7 @@
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTransparentStatusBar"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".presentation.ui.CreateOrderActivity"
             android:resizeableActivity="false"
