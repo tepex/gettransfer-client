@@ -66,17 +66,9 @@ fun AppCompatActivity.setStatusBarColor(@ColorRes color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             window.statusBarColor = ContextCompat.getColor(this, color)
         } else {
-            window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
+            window.statusBarColor = Color.TRANSPARENT
         }
     } else {
         window.statusBarColor = ContextCompat.getColor(this, color)
-    }
-}
-
-fun AppCompatActivity.setTransparentStatusBar() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.statusBarColor = Color.TRANSPARENT
-    } else {
-        window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
     }
 }

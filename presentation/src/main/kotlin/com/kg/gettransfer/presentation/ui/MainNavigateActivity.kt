@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.setTransparentStatusBar
 
 import com.kg.gettransfer.extensions.setupWithNavController
 
@@ -57,7 +56,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_navigate)
-        setTransparentStatusBar()
         getIntents(intent)
 
         if (savedInstanceState == null) {
