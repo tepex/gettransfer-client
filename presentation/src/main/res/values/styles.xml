@@ -295,14 +295,24 @@
         <item name="fontFamily">@font/sf_pro_text_regular</item>
     </style>
 
-    <style name="LargeRoundButton" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
+    // default backgroundTint is green
+    <style name="LargeRoundedButton" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="cornerRadius">@dimen/btn_radius</item>
         <item name="android:height">@dimen/btn_rounded_height</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">14sp</item>
+        <item name="backgroundTint">@color/color_states_green_material_button</item>
     </style>
 
-    <style name="LargeRoundButtonOutlined" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="MediumRoundedButton" parent="LargeRoundedButton">
+        <item name="android:height">@dimen/btn_rounded_height_medium</item>
+    </style>
+
+    <style name="LargeRoundedButton.Red">
+        <item name="backgroundTint">@color/color_states_red_material_button</item>
+    </style>
+
+    <style name="LargeRoundedButtonOutlined" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
         <item name="cornerRadius">@dimen/btn_radius</item>
         <item name="android:height">@dimen/btn_rounded_height</item>
         <item name="android:textColor">@android:color/black</item>

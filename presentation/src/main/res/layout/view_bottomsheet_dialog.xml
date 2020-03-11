@@ -48,16 +48,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bottomSheetDialogOkButton"
+        style="@style/LargeRoundedButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/btn_rounded_height"
         android:text="@string/LNG_OK"
         android:textSize="12sp"
         android:fontFamily="@font/sf_pro_text_semibold"
-        android:background="@drawable/btn_bg_rounded_green"
-        android:textColor="@color/colorWhite"
-        app:cornerRadius="@dimen/btn_radius"
-        app:backgroundTint="@color/color_gtr_green"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+        app:cornerRadius="@dimen/btn_radius" />
 
     <TextView
         android:id="@+id/bottomSheetDialogCancelButton"

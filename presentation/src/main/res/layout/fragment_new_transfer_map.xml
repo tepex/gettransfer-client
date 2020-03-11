@@ -50,20 +50,16 @@
             android:layout_gravity="center_vertical"/>
     </FrameLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnNext"
-        android:visibility="visible"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/LargeRoundedButton"
         android:layout_width="@dimen/general_button_width"
-        android:layout_height="@dimen/general_button_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/btn_next_main_margin_16dp"
-        android:background="@drawable/btn_bg_rounded_green"
-        android:enabled="true"
-        android:text="@string/LNG_NEXT"
-        android:textColor="@color/colorWhite" />
+        android:text="@string/LNG_NEXT" />
 
     <View
         android:id="@+id/viewGradient"

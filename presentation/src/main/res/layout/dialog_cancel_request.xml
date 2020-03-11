@@ -31,7 +31,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBack"
-        style="@style/LargeRoundButtonOutlined"
+        style="@style/LargeRoundedButtonOutlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/cancelation_request_dialog_button_back_margin_top"
@@ -39,7 +39,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelRequest"
-        style="@style/LargeRoundButton"
+        style="@style/LargeRoundedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/LNG_CANCEL"

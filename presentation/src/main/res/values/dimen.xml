@@ -65,7 +65,6 @@
 	<!-- About activity -->
 	<dimen name="about_activity_close_button_margin">20dp</dimen>
 	<dimen name="about_activity_indicator_radius">5dp</dimen>
-	<dimen name="about_activity_button_height">44dp</dimen>
 	<dimen name="about_activity_button_margin_bottom">20dp</dimen>
 	<dimen name="about_activity_button_margin_start_end">30dp</dimen>
 
@@ -312,7 +311,6 @@
     <dimen name="view_offer_car_img_width">112dp</dimen>
     <dimen name="view_offer_car_img_height">100dp</dimen>
     <dimen name="view_offer_car_img_margin_top">4dp</dimen>
-    <dimen name="view_offer_btn_book_height">32dp</dimen>
 	<dimen name="view_offer_btn_book_margin_end">8dp</dimen>
     <dimen name="view_offer_languages_container_margin_start">16dp</dimen>
     <dimen name="view_offer_btn_book_text_size">13sp</dimen>
@@ -388,7 +386,6 @@
 	<dimen name="activity_requests_tab_layout_text_size">17sp</dimen>
 	<dimen name="activity_requests_text_size_14sp">14sp</dimen>
 	<dimen name="activity_requests_btn_forward_main_margin_bottom">34dp</dimen>
-	<dimen name="activity_requests_btn_forward_main_height">48dp</dimen>
 
     <!-- activity_chat -->
     <dimen name="activity_chat_message_text_size">17sp</dimen>
@@ -609,6 +606,7 @@
 
 	<dimen name="btn_radius">22dp</dimen>
 	<dimen name="btn_rounded_height">56dp</dimen>
+	<dimen name="btn_rounded_height_medium">28dp</dimen>
 
 	<!--Shimmer loader-->
 	<dimen name="line_height">20dp</dimen>
@@ -621,7 +619,6 @@
 	<!--Profile settings-->
 	<dimen name="profile_settings_btns_vertical_margin">20dp</dimen>
 	<dimen name="profile_settings_btns_margin_top">24dp</dimen>
-	<dimen name="profile_settings_btns_text_size">14sp</dimen>
 
 	<!--Change account contact field screens-->
 	<dimen name="change_contact_screen_fields_vertical_padding">16dp</dimen>
@@ -763,7 +760,6 @@
 	<dimen name="driver_app_dialog_title_margin_top">32dp</dimen>
 	<dimen name="driver_app_dialog_info_margin_top">32dp</dimen>
 	<dimen name="driver_app_dialog_continue_btn_margin_top">56dp</dimen>
-	<dimen name="driver_app_dialog_continue_btn_text_size">14sp</dimen>
 	<dimen name="driver_app_dialog_cancel_btn_vertical_margin">24dp</dimen>
 	<dimen name="driver_app_dialog_close_btn_margin_top_end">16dp</dimen>
 

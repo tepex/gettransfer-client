@@ -151,17 +151,16 @@
     </androidx.core.widget.NestedScrollView>
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnOk"
+        style="@style/LargeRoundedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin16"
         android:layout_marginBottom="@dimen/margin16"
         android:layout_marginStart="@dimen/margin24"
         android:layout_marginEnd="@dimen/margin24"
-        android:background="@drawable/btn_bg_rounded_green"
         android:text="@android:string/ok"
-        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

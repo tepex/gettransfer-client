@@ -72,18 +72,16 @@
             <requestFocus />
         </com.chaos.view.PinView>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDone"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/LargeRoundedButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/general_button_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginEnd="@dimen/fragment_sms_btn_done_vertical_margin"
             android:layout_marginBottom="@dimen/fragment_sms_btn_done_margin_bottom"
-            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_DONE"
-            android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/btnResendCode"/>

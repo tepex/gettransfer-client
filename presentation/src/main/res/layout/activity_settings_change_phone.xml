@@ -51,19 +51,17 @@
                 android:visibility="gone"
                 app:activation_code_title="@string/LNG_PHONE_SENT_ACTIVATION_CODE" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnChangePhone"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/LargeRoundedButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/general_button_height"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/change_contact_screen_btn_done_margins"
                 android:layout_marginEnd="@dimen/change_contact_screen_btn_done_margins"
                 android:layout_marginBottom="@dimen/change_contact_screen_btn_done_margins"
-                android:background="@drawable/btn_bg_rounded_green"
                 android:enabled="false"
-                android:text="@string/LNG_CHANGE_PHONE"
-                android:textColor="@color/colorWhite" />
+                android:text="@string/LNG_CHANGE_PHONE" />
 
         </RelativeLayout>
 
