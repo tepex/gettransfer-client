@@ -304,7 +304,7 @@ class RegressSuite : TestCase(
                 }
             }
             step("PayCardFail") {
-                PayFun.goFailPayCard()
+                PayFun.goFailPayCardPlatron()
             }
             step("FailCheck") {
                 Screen.idle(DELAY_VERY_BIG)
