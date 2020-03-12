@@ -55,7 +55,6 @@ abstract class BaseMapFragment : MvpAppCompatFragment() {
         gm.uiSettings.isRotateGesturesEnabled = false
         gm.uiSettings.isTiltGesturesEnabled = false
         gm.uiSettings.isMyLocationButtonEnabled = false
-        gm.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json))
         gm.setPadding(0, 0, 0, LABEL_VERTICAL_POSITION)
         gm.setOnCameraMoveStartedListener { reason ->
             if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
