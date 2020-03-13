@@ -50,7 +50,7 @@
                 android:id="@+id/hourly_duration"/>
 
             <RelativeLayout
-                android:id="@+id/cl_offer_price"
+                android:id="@+id/offerPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -74,7 +74,9 @@
 
             </RelativeLayout>
 
-            <include layout="@layout/view_divider_horizontal"/>
+            <include
+                android:id="@+id/dividerOfferPrice"
+                layout="@layout/view_divider_horizontal" />
 
             <com.kg.gettransfer.presentation.ui.custom.CreateOrderField
                 android:id="@+id/transfer_date_time_field"

@@ -78,6 +78,11 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
     private var isMapInitialized = false
     private var isTimeSetByUser = false
 
+    override fun attachView(view: CreateOrderView) {
+        super.attachView(view)
+        if (isBusinessAccount()) view.hideOfferPrice()
+    }
+
     fun init() {
         updateRouteInfo(true)
         worker.main.launch {
@@ -610,11 +615,7 @@ class CreateOrderPresenter : BasePresenter<CreateOrderView>() {
         analytics.logSingleEvent(Analytics.CAR_INFO_CLICKED)
     }
 
-    fun onChangeCurrencyClick() {
-        if (!isBusinessAccount()) {
-            viewState.showCurrencies()
-        }
-    }
+    fun onChangeCurrencyClick() = viewState.showCurrencies()
 
     override fun onDestroy() {
         worker.cancel()

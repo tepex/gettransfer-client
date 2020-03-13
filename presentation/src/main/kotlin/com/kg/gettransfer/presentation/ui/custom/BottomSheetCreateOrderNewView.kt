@@ -155,7 +155,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
         comment_field.field_input.setOnClickListener       { listener?.onCommentClick(comment) }
         field_input.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) listener?.checkPromoCode() }
 
-        cl_offer_price.setOnClickListener      { fieldTouched(price_field_input.field_input)  }
+        offerPrice.setOnClickListener      { fieldTouched(price_field_input.field_input)  }
         sign_name_field.setOnClickListener     { fieldTouched(sign_name_field.field_input) }
         flight_number_field.setOnClickListener { fieldTouched(flight_number_field.field_input) }
 
@@ -179,7 +179,7 @@ class BottomSheetCreateOrderNewView @JvmOverloads constructor(
 
         rvTransferType.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvTransferType.isNestedScrollingEnabled = false
-        adapter = TransferTypeAdapter() { transportType, showInfo ->
+        adapter = TransferTypeAdapter { transportType, showInfo ->
             checkErrorField(rvTransferType)
             listener?.onTransportTypeClicked(transportType, showInfo)
         }
