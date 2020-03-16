@@ -453,6 +453,11 @@ class CreateOrderActivity : BaseGoogleMapActivity(),
         )
     }
 
+    override fun hideOfferPrice() {
+        sheetOrder.offerPrice.isVisible = false
+        sheetOrder.dividerOfferPrice.isVisible = false
+    }
+
     companion object {
         const val FIELD_START  = true
         const val FIELD_RETURN = false

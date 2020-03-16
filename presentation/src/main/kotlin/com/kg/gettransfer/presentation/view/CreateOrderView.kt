@@ -33,6 +33,7 @@ interface CreateOrderView : BaseView, RouteView {
     fun highLightErrorField(errorField: FieldError)
     fun showCommentDialog(comment: String, hintsToComments: List<String>?)
     fun showCurrencies()
+    fun hideOfferPrice()
 
     enum class FieldError(val value: String?, @StringRes val stringId: Int, val formatArg: String? = null) {
         EMAIL_FIELD(Analytics.INVALID_EMAIL, R.string.LNG_RIDE_EMAIL),
