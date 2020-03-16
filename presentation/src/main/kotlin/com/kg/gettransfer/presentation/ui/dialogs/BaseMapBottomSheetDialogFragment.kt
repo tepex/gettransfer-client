@@ -22,7 +22,7 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
 
     abstract fun getPresenter(): BaseMapDialogPresenter<*>
 
-    private lateinit var googleMap: GoogleMap
+    private var googleMap: GoogleMap? = null
 
     private var mapFragment: SupportMapFragment? = null
 
@@ -40,7 +40,7 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        customizeGoogleMaps(googleMap)
+        googleMap?.let { customizeGoogleMaps(it) }
         getPresenter().onMapReady()
     }
 
@@ -58,26 +58,25 @@ abstract class BaseMapBottomSheetDialogFragment : BaseBottomSheetDialogFragment(
             if (MapHelper.isEmptyPolyline(polyline, routeModel)) {
                 return
             } else {
-                context?.let { MapHelper.setPolyline(it, layoutInflater, googleMap, polyline, routeModel) }
+                googleMap?.let {
+                    MapHelper.setPolyline(requireContext(), layoutInflater, it, polyline, routeModel)
+                }
             }
         } else {
-            setPinForHourlyTransfer(from, "", startPoint, Utils.getCameraUpdateForPin(startPoint))
+            setPinForHourlyTransfer(from, startPoint, Utils.getCameraUpdateForPin(startPoint))
         }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun setPinForHourlyTransfer(
         placeName: String,
-        info: String,
         point: LatLng,
-        cameraUpdate: CameraUpdate,
-        driver: Boolean = false
+        cameraUpdate: CameraUpdate
     ) {
         val markerRes = R.drawable.ic_map_label_a
-        val bmPinA = MapHelper.getPinBitmap(layoutInflater, placeName, info, markerRes)
+        val bmPinA = MapHelper.getPinBitmap(layoutInflater, placeName, "", markerRes)
         val startMakerOptions = MarkerOptions().position(point).icon(BitmapDescriptorFactory.fromBitmap(bmPinA))
-        googleMap.addMarker(startMakerOptions)
-        googleMap.moveCamera(cameraUpdate)
+        googleMap?.addMarker(startMakerOptions)
+        googleMap?.moveCamera(cameraUpdate)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {}

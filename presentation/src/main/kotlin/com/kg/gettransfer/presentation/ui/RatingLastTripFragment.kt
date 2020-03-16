@@ -13,6 +13,7 @@ import com.kg.gettransfer.presentation.presenter.RatingLastTripPresenter
 
 import com.kg.gettransfer.presentation.ui.dialogs.BaseMapBottomSheetDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
+import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment.Companion.RATE_DIALOG_TAG
 
 import com.kg.gettransfer.presentation.view.BaseView
 import com.kg.gettransfer.presentation.view.RatingLastTripView
@@ -74,10 +75,11 @@ class RatingLastTripFragment : BaseMapBottomSheetDialogFragment(), RatingLastTri
     }
 
     override fun showDetailedReview() {
-        if (fragmentManager?.fragments?.firstOrNull { it.tag == RatingDetailDialogFragment.RATE_DIALOG_TAG } == null) {
+        val fragments = parentFragmentManager.fragments
+        if (fragments.firstOrNull { it.tag == RATE_DIALOG_TAG } == null) {
             RatingDetailDialogFragment
                 .newInstance()
-                .show(requireFragmentManager(), RatingDetailDialogFragment.RATE_DIALOG_TAG)
+                .show(requireFragmentManager(), RATE_DIALOG_TAG)
         }
     }
 
