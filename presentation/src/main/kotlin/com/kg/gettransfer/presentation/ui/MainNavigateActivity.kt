@@ -13,7 +13,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.FragmentNavigator
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.extensions.setTransparentStatusBar
 
 import com.kg.gettransfer.extensions.setupWithNavController
 
@@ -23,7 +22,6 @@ import com.kg.gettransfer.presentation.ui.dialogs.AboutNewDriverAppDialogFragmen
 import com.kg.gettransfer.presentation.ui.dialogs.RatingDetailDialogFragment
 import com.kg.gettransfer.presentation.ui.dialogs.StoreDialogFragment
 import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMainFragment
-import com.kg.gettransfer.presentation.ui.newtransfer.NewTransferMapFragment
 import com.kg.gettransfer.presentation.view.MainNavigateView
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_ERROR_RES_ID
 import com.kg.gettransfer.presentation.view.MainNavigateView.Companion.EXTRA_RATE_TRANSFER_ID
@@ -57,7 +55,6 @@ class MainNavigateActivity : BaseActivity(), MainNavigateView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_navigate)
-        setTransparentStatusBar()
         getIntents(intent)
 
         if (savedInstanceState == null) {
