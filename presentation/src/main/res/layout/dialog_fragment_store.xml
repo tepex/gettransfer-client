@@ -34,18 +34,16 @@
 		android:gravity="center_horizontal"
 		android:text="@string/LNG_REVIEW_REQUEST_ANDROID" />
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/btnContinue"
+		style="@style/LargeRoundedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="20dp"
 		android:layout_marginEnd="20dp"
 		android:layout_marginTop="20dp"
 		android:layout_marginBottom="23dp"
-		android:text="@string/LNG_REVIEW_REQUEST_CONTINUE"
-		android:textSize="14sp"
-		style="@style/sf_pro_text_semibold_white"
-		android:background="@drawable/btn_bg_rounded_green"/>
+		android:text="@string/LNG_REVIEW_REQUEST_CONTINUE" />
 
 	<TextView
 		android:id="@+id/btnCancel"

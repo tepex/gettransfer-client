@@ -178,21 +178,17 @@
             tools:text="+101.98"
             tools:visibility="visible" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_book_tiny"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/MediumRoundedButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/view_offer_btn_book_height"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_offer_btn_book_margin_end"
             android:layout_marginEnd="@dimen/view_offer_btn_book_margin_end"
             android:layout_marginTop="@dimen/offer_tiny_rating_margin_top"
             android:layout_marginBottom="@dimen/offer_tiny_rating_margin_bottom"
-            android:background="@drawable/btn_bg_rounded_green"
             android:gravity="center"
             android:text="@string/LNG_BOOK"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/view_offer_btn_book_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/img_car_photo_tiny"

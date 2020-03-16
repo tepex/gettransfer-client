@@ -30,10 +30,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bntRestore"
-        style="@style/LargeRoundButton"
+        style="@style/LargeRoundedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/cancelation_request_dialog_button_restore_margin_top"
-        android:text="@string/LNG_RESTORE_REQUEST"
-        app:backgroundTint="@color/color_gtr_green"/>
+        android:text="@string/LNG_RESTORE_REQUEST" />
 </LinearLayout>

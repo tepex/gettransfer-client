@@ -82,7 +82,7 @@
     <color name="color_car_blue">#015db8</color>
     <color name="color_car_yellow">#fbff06</color>
     <color name="color_car_brown">#8b400d</color>
-    <color name="color_car_silver">#e5e5e5</color>
+    <color name="color_car_silver">@color/color_gtr_light_grey</color>
     <color name="color_car_green">#31b700</color>
     <color name="color_car_gray">#b2b2b2</color>
     <color name="color_car_purple">#800083</color>

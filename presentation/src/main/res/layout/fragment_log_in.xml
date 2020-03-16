@@ -13,30 +13,26 @@
         android:paddingEnd="@dimen/fragment_log_in_vertical_padding"
         android:paddingBottom="@dimen/fragment_sign_up_vertical_padding">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/LargeRoundedButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/general_button_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/login_btnLogin_margin_top"
-            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_LOGIN_WITH_PASSWORD"
-            android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRequestCode"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@style/LargeRoundedButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/general_button_height"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_log_in_btn_with_code_margin_top"
-            android:background="@drawable/btn_bg_rounded_green"
             android:enabled="false"
             android:text="@string/LNG_LOGIN_CODE"
-            android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_variant" />
