@@ -119,13 +119,25 @@ class GTApplication : MultiDexApplication() {
 
     private fun setupAppsFlyer() {
         val conversionListener = object : AppsFlyerConversionListener {
-            override fun onAppOpenAttribution(p0: MutableMap<String, String>?) {}
+            override fun onAppOpenAttribution(data: MutableMap<String, String>?) {
+                data?.map { Timber.d("onAppOpen_attribute: ${it.key} = ${it.value}") }
+            }
 
-            override fun onAttributionFailure(p0: String?) {}
+            override fun onAttributionFailure(error: String?) {
+                Timber.e("error onAttributionFailure :  $error")
+            }
 
-            override fun onConversionDataSuccess(p0: MutableMap<String, Any>?) {}
+            override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
+                data?.let { cvData ->
+                    cvData.map {
+                        Timber.i("conversion_attribute:  ${it.key} = ${it.value}")
+                    }
+                }
+            }
 
-            override fun onConversionDataFail(p0: String?) {}
+            override fun onConversionDataFail(error: String?) {
+                Timber.e("error onAttributionFailure :  $error")
+            }
         }
         AppsFlyerLib.getInstance().init(getString(R.string.appsflyer_api_key), conversionListener, applicationContext)
         AppsFlyerLib.getInstance().startTracking(this)
