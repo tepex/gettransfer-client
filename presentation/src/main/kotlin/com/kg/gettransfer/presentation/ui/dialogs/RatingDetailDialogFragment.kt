@@ -146,7 +146,7 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
     override fun showCommentDialog(comment: String) {
         val commentDialog = CommentDialogFragment.newInstance(comment)
         commentDialog.setTargetFragment(this@RatingDetailDialogFragment, COMMENT_REQUEST_CODE)
-        commentDialog.show(requireFragmentManager(), COMMENT_DIALOG_TAG)
+        commentDialog.show(parentFragmentManager, COMMENT_DIALOG_TAG)
     }
 
     @CallSuper
@@ -193,7 +193,9 @@ class RatingDetailDialogFragment : BaseBottomSheetDialogFragment(), RatingDetail
         }
     }
 
-    private fun setComment(comment: String) = etComment.setText(comment)
+    private fun setComment(comment: String) {
+        etComment?.setText(comment)
+    }
 
     interface OnRatingChangeListener {
         fun onRatingChanged(list: List<ReviewRate>, comment: String)

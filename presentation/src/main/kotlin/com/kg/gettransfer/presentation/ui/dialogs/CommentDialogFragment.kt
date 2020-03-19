@@ -67,7 +67,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         hideKeyboard()
-        sendCommentToTargetFragment(comment)
+        sendCommentToRatingDetailFragment(comment)
     }
 
     override fun onDetach() {
@@ -81,7 +81,6 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         tvSend.setOnClickListener {
             comment = etComment.text.toString().trim()
             onCommentLister?.onSetComment(comment)
-            sendCommentToTargetFragment(comment)
             view?.let { setBottomSheetState(it, BottomSheetBehavior.STATE_HIDDEN) }
             hideKeyboard()
         }
@@ -109,7 +108,7 @@ class CommentDialogFragment : BaseBottomSheetDialogFragment(), CommentView {
         }
     }
 
-    private fun sendCommentToTargetFragment(comment: String) {
+    private fun sendCommentToRatingDetailFragment(comment: String) {
         val intent = Intent().apply { putExtra(EXTRA_COMMENT, comment) }
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
