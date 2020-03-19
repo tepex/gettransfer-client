@@ -40,6 +40,6 @@ class SettingsChangeEmailActivity : SettingsChangeContactBaseActivity() {
     }
 
     override fun setToolbar(text: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_EMAIL), text)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGE_EMAIL), text)
     }
 }
