@@ -51,13 +51,13 @@ class RegressSuite : TestCase(
                 }
             }
             step("CreateTransfer") {
-                TransferDetails {
-                    typeCars { swipeUp() }
+                OrdersDetails {
+                    transportType { swipeUp() }
                     Screen.idle(DELAY_VERY_BIG)
                     BaseFun.chooseDate()
-                    getOffers { click() }
-                    BaseFun.goTransferType()
-                    BaseFun.goSwitchAgreement()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             step("OpenRequestInfo") {
@@ -70,7 +70,7 @@ class RegressSuite : TestCase(
                     tvCancel { click() }
                     BaseFun.okCancel()
                     step("OpenPastTrips") {
-                        BaseFun.openPastTrips()
+                        TripsScreen.openPastTrips()
                     }
                     step("RepeatTransfer") {
                         TripsScreen {
@@ -92,7 +92,7 @@ class RegressSuite : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             step("GoLogin") {
                 BaseFun.goProfilePassenger()
@@ -120,15 +120,14 @@ class RegressSuite : TestCase(
                 }
             }
             step("CreateTransfer") {
-                TransferDetails {
+                OrdersDetails {
                     Screen.idle()
-                    typeCars { swipeUp() }
+                    transportType { swipeUp() }
                     Screen.idle(DELAY_SMALL)
-                    val baseFun = BaseFun
-                    baseFun.chooseDate()
-                    getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    BaseFun.chooseDate()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
         }
@@ -144,7 +143,7 @@ class RegressSuite : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             step("GoLogin") {
                 BaseFun.goProfilePartner()
@@ -190,7 +189,7 @@ class RegressSuite : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             step("UnLogin") {
@@ -224,7 +223,7 @@ class RegressSuite : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             step("UnLogin") {
                 BaseFun.unLogin()
@@ -263,23 +262,23 @@ class RegressSuite : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEMO ") {
-                BaseFun.checkoutDemo()
+                SettingsScreen.checkoutDemo()
             }
             step("GoLogin") {
                 BaseFun.goProfilePartner()
             }
             Screen.idle(Constants.big)
-            BaseFun. goToSearchScreen()
-            BaseFun.inputAddress()
+            OrderScreen.goToSearchScreen()
+            SearchForm.inputAddress()
             step("CreateTransfer") {
-                TransferDetails {
+                OrdersDetails {
                     Screen.idle(DELAY_VERY_BIG)
-                    typeCars { swipeUp() }
+                    transportType { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     BaseFun.chooseDate()
-                    getOffers { click() }
-                    BaseFun.goTransferType()
-                    BaseFun.goSwitchAgreement()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             step("BookNow") {

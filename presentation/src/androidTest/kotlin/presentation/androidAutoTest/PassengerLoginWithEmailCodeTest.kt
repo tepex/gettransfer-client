@@ -35,7 +35,7 @@ class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().ap
             step("Open Main Screen") {
                 BaseFun.goStart()            }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             NavBar {

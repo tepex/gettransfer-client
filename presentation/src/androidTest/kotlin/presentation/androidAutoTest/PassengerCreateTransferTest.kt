@@ -14,8 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
-import com.kg.gettransfer.presentation.screenelements.OffersScreen
-import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.*
 
 class PassengerCreateTransferTest : TestCase(
     Kaspresso.Builder.default().apply {
@@ -36,15 +35,15 @@ class PassengerCreateTransferTest : TestCase(
             step("Open Screen") {
                 BaseFun.goStart()            }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             step("Signed in account") {
                 BaseFun.goProfilePassenger()
             }
-            BaseFun.changeLanguage()
-            BaseFun.goToSearchScreen()
-            BaseFun.inputAddress()
+            SettingsScreen.changeLanguage()
+            OrderScreen.goToSearchScreen()
+            SearchForm.inputAddress()
             step("Create order") {
                 OrdersDetails {
                     content { swipeUp() }
@@ -52,8 +51,8 @@ class PassengerCreateTransferTest : TestCase(
                     BaseFun.chooseDate()
                     plusPassenger { click() }
                     btnGetOffers { click() }
-                    BaseFun.goTransferType()
-                    BaseFun.goSwitchAgreement()
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             Screen.idle(Constants.medium)

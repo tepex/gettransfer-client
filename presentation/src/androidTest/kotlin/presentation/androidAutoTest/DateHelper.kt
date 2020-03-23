@@ -25,12 +25,8 @@ class DateHelper {
     }
 
     private fun formatToDate(fromUnixtime: String, formatter: String): String? {
-        try {
             val sdf = SimpleDateFormat(formatter)
             val netDate = Date(fromUnixtime.toLong() * oneThousand)
             return sdf.format(netDate)
-        } catch (e: Exception) {
-            return e.toString()
-        }
     }
 }

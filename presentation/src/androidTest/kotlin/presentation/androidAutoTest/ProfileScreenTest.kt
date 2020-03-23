@@ -42,7 +42,7 @@ class ProfileScreenTest : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             BaseFun.unLogin()
