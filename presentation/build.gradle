@@ -3,7 +3,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/"}
     }
     dependencies {
-        classpath "gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.4, 0.99.99]"
+        classpath "gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.6, 0.99.99]"
         classpath 'com.karumi:shot:3.1.0'
     }
 }
@@ -72,7 +72,7 @@ ext {
     swipe_refresh_version      = "1.1.0-alpha03"
     checkout_frames_version    = "2.1.1"
     appcenter_version          = "2.5.1"
-    onesignal_version          = "[3.11.2, 3.99.99]"
+    onesignal_version          = "3.12.7"
 }
 
 android {
