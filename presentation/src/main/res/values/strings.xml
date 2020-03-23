@@ -329,8 +329,6 @@
     <string name="LNG_PROFILE">Profile</string>
     <string name="LNG_CHANGE_EMAIL">Change e-mail</string>
     <string name="LNG_CHANGE_PHONE">Change phone</string>
-    <string name="LNG_CHANGING_EMAIL">Changing e-mail</string>
-    <string name="LNG_CHANGING_PHONE">Changing phone</string>
     <string name="LNG_RIDE_OFFER_CANCELLED">Offer was canceled</string>
     <string name="LNG_RIDE_DATE_RETURN">Return date and time</string>
     <string name="LNG_OFFERS_SUPPORT">GetTransfer Support</string>

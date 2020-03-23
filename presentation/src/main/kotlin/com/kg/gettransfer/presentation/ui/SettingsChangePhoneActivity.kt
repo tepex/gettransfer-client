@@ -39,6 +39,6 @@ class SettingsChangePhoneActivity : SettingsChangeContactBaseActivity() {
     }
 
     override fun setToolbar(text: String?) {
-        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGING_PHONE), text)
+        setToolbar(toolbar, TitleModel.Id(R.string.LNG_CHANGE_PHONE), text)
     }
 }
