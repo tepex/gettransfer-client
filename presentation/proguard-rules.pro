@@ -159,3 +159,6 @@
 -keep public class com.google.firebase.iid.FirebaseInstanceId {
   public *;
 }
+-keep public class com.google.firebase.messaging.FirebaseMessagingService {
+  public *;
+}
