@@ -1,6 +1,10 @@
 package com.kg.gettransfer.presentation.screenelements
 
 import android.view.View
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.matcher.ViewMatchers.withId
 
 import com.agoda.kakao.common.views.KSwipeView
 import com.agoda.kakao.common.views.KView
@@ -14,8 +18,10 @@ import com.agoda.kakao.text.KButton
 import com.agoda.kakao.text.KTextView
 
 import com.kg.gettransfer.R
+import com.kg.gettransfer.presentation.data.Constants
 
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 
 object TripsScreen  : Screen<TripsScreen>() {
     val requests = KView { withId(R.id.rvRequests) }
@@ -77,6 +83,21 @@ object TripsScreen  : Screen<TripsScreen>() {
         val btnBack = KButton {
             withId(R.id.btnBack)
             isDisplayed()
+        }
+    }
+
+    fun openPastTrips() {
+        onView(allOf(withId(R.id.nav_trips))).perform(click())
+        onView(allOf(withId(R.id.vpRequests))).perform(swipeLeft())
+        Thread.sleep(Constants.big)
+        TripsScreen {
+            recycler {
+                isVisible()
+                firstChild<TripsScreen.Item> {
+                    isVisible()
+                    click()
+                }
+            }
         }
     }
 }

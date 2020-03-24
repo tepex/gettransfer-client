@@ -36,7 +36,7 @@ class PassengerLoginWithPhoneTest : TestCase(Kaspresso.Builder.default().apply {
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             BaseFun.unLogin()

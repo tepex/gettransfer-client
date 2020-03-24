@@ -14,8 +14,11 @@ import org.junit.Rule
 import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
 
 import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 
 class DistanceValueCheckTest : TestCase(
     Kaspresso.Builder.default().apply {
@@ -37,26 +40,26 @@ class DistanceValueCheckTest : TestCase(
                 BaseFun.goStart()
             }
             step(" Checkout DEV ") {
-                BaseFun.checkoutDev()
+                SettingsScreen.checkoutDev()
             }
             Screen.idle(Constants.small)
             step("Signed in account") {
                     BaseFun.goProfilePassenger()
             }
-            BaseFun.changeLanguage()
+            SettingsScreen.changeLanguage()
             Screen.idle(Constants.small)
-            BaseFun.switchDistanceOff()
+            SettingsScreen.switchDistanceOff()
             BaseFun.checkSwitcherChanging(arrayOf("km"))
-            BaseFun.goToSearchScreen()
-            BaseFun.inputAddress()
+            OrderScreen.goToSearchScreen()
+            SearchForm.inputAddress()
             Screen.idle(Constants.small)
             OrdersDetails {
                 btnBack { flakySafely {  click() } }
             }
-            BaseFun.switchDistanceOn()
+            SettingsScreen.switchDistanceOn()
             BaseFun.checkSwitcherChanging(arrayOf("miles"))
-            BaseFun. goToSearchScreen()
-            BaseFun.inputAddress()
+            OrderScreen. goToSearchScreen()
+            SearchForm.inputAddress()
             Screen.idle(Constants.big)
             OrdersDetails {
                 btnBack { click() }

@@ -15,6 +15,7 @@ import org.junit.Test
 
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.*
+import org.junit.jupiter.api.Order
 
 class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
     flakySafetyParams.apply {
@@ -62,14 +63,14 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 }
             }
             step("CreateTransfer") {
-                TransferDetails {
+                OrdersDetails {
                     Screen.idle(DELAY_VERY_BIG)
-                    typeCars { swipeUp() }
+                    transportType { swipeUp() }
                     Screen.idle(DELAY_VERY_BIG)
                     BaseFun.chooseDate()
-                    getOffers { click() }
-                    BaseFun.goTransferType()
-                    BaseFun.goSwitchAgreement()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             step("CheckElements") {
@@ -100,18 +101,18 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 }
             }
             step("Locations") {
-                BaseFun.inputAddress()
+                SearchForm.inputAddress()
             }
             step("CreateTransfer") {
-                TransferDetails {
+                OrdersDetails {
                     Screen.idle(DELAY_MEDIUM)
-                    typeCars { swipeUp() }
+                    transportType { swipeUp() }
                     Screen.idle(DELAY_SMALL)
                     val baseFun = BaseFun
                     baseFun.chooseDate()
-                    getOffers { click() }
-                    baseFun.goTransferType()
-                    baseFun.goSwitchAgreement()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             step("BookNow") {
@@ -146,28 +147,26 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 BaseFun.goStart()
             }
             step(" Checkout DEMO ") {
-                BaseFun.checkoutDemo()
+                SettingsScreen.checkoutDemo()
             }
             step("GoLogin") {
                 BaseFun.goProfilePartner()
             }
             step("TakeGeo") {
-                MainScreen {
-                    subTitle { click() }
-                }
+                OrderScreen.goToSearchScreen()
             }
             step("Locations") {
-                BaseFun.inputAddress()
+                SearchForm.inputAddress()
             }
             step("CreateTransfer") {
-                TransferDetails {
+                OrdersDetails {
                     Screen.idle(Constants.medium)
-                    typeCars { swipeUp() }
+                    transportType { swipeUp() }
                     Screen.idle(Constants.medium)
                     BaseFun.chooseDate()
-                    getOffers { click() }
-                    BaseFun.goTransferType()
-                    BaseFun.goSwitchAgreement()
+                    btnGetOffers { click() }
+                    OrdersDetails.goTransferType()
+                    OrdersDetails.goSwitchAgreement()
                 }
             }
             step("BookNow") {
@@ -321,7 +320,7 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 BaseFun.goProfilePartner()
             }
             step("OpenPastTrips") {
-                BaseFun.openPastTrips()
+                TripsScreen.openPastTrips()
             }
             step("CheckPastTrips") {
                 TripsScreen {
@@ -393,7 +392,7 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
             }
             step("CheckTips") {
                 Screen.idle(DELAY_MEDIUM)
-                BaseFun.checkTips()
+                SearchForm.checkTips()
             }
         }
     }

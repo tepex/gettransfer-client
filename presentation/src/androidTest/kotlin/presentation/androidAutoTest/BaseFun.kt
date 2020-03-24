@@ -1,6 +1,5 @@
 package com.kg.gettransfer.presentation.androidAutoTest
 
-import android.view.View
 import android.widget.DatePicker
 
 import androidx.test.espresso.assertion.ViewAssertions
@@ -12,20 +11,16 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.contrib.PickerActions
-import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.agoda.kakao.screen.Screen
 
 import com.kg.gettransfer.R
-import com.kg.gettransfer.presentation.adapter.PopularAddressAdapter
 
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.equalTo
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.*
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.TypeSafeMatcher
+
 import presentation.androidAutoTest.Capture
 import presentation.androidAutoTest.DateHelper
 import presentation.androidAutoTest.NetworkRequests
@@ -55,34 +50,6 @@ object BaseFun {
         Screen.idle(Constants.medium)
         if (onView(allOf(withId(R.id.iv_close))).isDisplayed()) {
             onView(withId(R.id.iv_close)).perform(click())
-        }
-    }
-
-    fun goSwitchAgreement() {
-        if (onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).isDisplayed()) {
-            onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
-            onView(withId(R.id.scrollContent)).perform(swipeUp())
-            onView(withId(R.id.switchAgreement)).perform(click())
-            onView(withId(R.id.btnGetOffers)).perform(click())
-        }
-    }
-
-    fun switchDistanceOn() {
-        onView(withId(R.id.nav_settings)).perform(click())
-        SettingsScreen {
-            tvDistanceSwitcher {
-                setChecked(checked = false)
-                click()
-            }
-        }
-    }
-    fun switchDistanceOff() {
-        onView(withId(R.id.nav_settings)).perform(click())
-        SettingsScreen {
-            tvDistanceSwitcher {
-                setChecked(checked = true)
-                click()
-            }
         }
     }
 
@@ -124,6 +91,12 @@ object BaseFun {
         }
     }
 
+    fun goTransfer() {
+        if (onView(allOf(withId(R.id.btn_request_info))).isDisplayed()) {
+            onView(withId(R.id.btn_request_info)).perform(click())
+        }
+    }
+
     fun goBackToTrips() {
         if (onView(allOf(withId(R.id.btnBack))).isDisplayed()) {
             onView(withId(R.id.btnBack)).perform(click())
@@ -131,44 +104,6 @@ object BaseFun {
                 onView(withId(R.id.btn_back)).perform(click())
             }
         }
-    }
-
-    fun goTransferType() {
-        if (onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).isDisplayed()) {
-            onView(allOf(withId(android.R.id.button1), withText(Constants.TEXT_OK))).perform(click())
-            onView(withId(R.id.rvTransferType)).perform(click())
-            onView(withId(R.id.btnGetOffers)).perform(click())
-        }
-    }
-
-    fun goToSearchScreen() {
-        Screen.idle(Constants.small)
-        onView(withId(R.id.nav_order)).perform(click())
-        onView(allOf(withId(R.id.sub_title), withText(R.string.LNG_FIELD_SOURCE_PICKUP))).perform(click())
-    }
-
-    fun goTransfer() {
-        if (onView(allOf(withId(R.id.btn_request_info))).isDisplayed()) {
-            onView(withId(R.id.btn_request_info)).perform(click())
-        }
-    }
-
-    fun inputAddress() {
-        Thread.sleep(Constants.big)
-        onView(allOf(withId(R.id.addressField), isDescendantOfA(withId(R.id.searchFrom))))
-            .perform(clearText())
-        onView(allOf(withId(R.id.addressField), isDescendantOfA(withId(R.id.searchFrom))))
-            .perform(typeText(Constants.TEXT_MOSCOW))
-        Thread.sleep(Constants.small)
-        onView(allOf(withId(R.id.addressItem), withText(Constants.TEXT_MOSCOW_SELECT), isDisplayed()))
-            .perform(click())
-
-        onView(allOf(withId(R.id.addressField), isDescendantOfA(withId(R.id.searchTo)))).perform(clearText())
-        onView(allOf(withId(R.id.addressField), isDescendantOfA(withId(R.id.searchTo))))
-            .perform(typeText(Constants.TEXT_PETERSBURG))
-        Thread.sleep(Constants.small)
-        onView(allOf(withId(R.id.addressItem), withText(Constants.TEXT_PETERSBURG_SELECT), isDisplayed()))
-            .perform(click())
     }
 
     fun goProfilePartner() {
@@ -223,13 +158,6 @@ object BaseFun {
         }
     }
 
-    fun changeLanguage() {
-        Screen.idle(Constants.small)
-        onView(withId(R.id.nav_settings)).perform(click())
-        onView(withId(R.id.settingsLanguage)).perform(click())
-        onView(allOf(withId(R.id.languageName), withText(Constants.TEXT_RUSSIANLANGUAGE))).perform(click())
-    }
-
     fun unLogin() {
         onView(withId(R.id.nav_settings)).perform(click())
         onView(withId(R.id.scrollViewSettings)).perform(swipeDown())
@@ -238,25 +166,6 @@ object BaseFun {
             onView(withId(R.id.btnLogout)).perform(click())
             Screen.idle(Constants.medium)
             onView(withId(R.id.titleText)).perform(click())
-        }
-    }
-
-    fun checkoutDev() {
-        onView(withId(R.id.nav_settings)).perform(click())
-        onView(withId(R.id.scrollViewSettings)).perform(swipeUp())
-        if (onView(allOf(withId(R.id.field_text), withText(R.string.endpoint_demo))).isDisplayed()) {
-            onView(allOf(withId(R.id.field_text), withText(R.string.endpoint_demo))).perform(click())
-            Screen.idle(Constants.medium)
-            onView(withText(R.string.endpoint_dev)).perform(click())
-        }
-    }
-    fun checkoutDemo() {
-        onView(withId(R.id.nav_settings)).perform(click())
-        onView(withId(R.id.scrollViewSettings)).perform(swipeUp())
-        if (onView(allOf(withId(R.id.field_text), withText(R.string.endpoint_dev))).isDisplayed()) {
-            onView(allOf(withId(R.id.field_text), withText(R.string.endpoint_dev))).perform(click())
-            Screen.idle(Constants.medium)
-            onView(withText(R.string.endpoint_demo)).perform(click())
         }
     }
 
@@ -307,45 +216,4 @@ object BaseFun {
         onView(allOf(withId(R.id.ivClose))).perform(click())
         onView(allOf(withId(R.id.btnBack))).perform(click())
     }
-
-    fun  checkTips() {
-        for (pos in 1..Constants.POSITION_THIRD) {
-            onView(allOf(withId(R.id.rv_popularList))).isDisplayed()
-            onView(withId(R.id.rv_popularList))
-                .perform(actionOnItemAtPosition<PopularAddressAdapter.ViewHolder>(pos, click()))
-        }
-    }
-
-    fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
-        return object : TypeSafeMatcher<View>() {
-            var currentIndex = 0
-
-            override fun describeTo(description: Description) {
-                description.appendText("with index: ")
-                description.appendValue(index)
-                matcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                return matcher.matches(view) && currentIndex++ == index
-            }
-        }
-    }
-
-    fun openPastTrips() {
-        onView(allOf(withId(R.id.nav_trips))).perform(click())
-        onView(allOf(withId(R.id.vpRequests))).perform(swipeLeft())
-        Thread.sleep(Constants.big)
-        TripsScreen {
-            recycler {
-                isVisible()
-                firstChild<TripsScreen.Item> {
-                    isVisible()
-                    click()
-                }
-            }
-        }
-    }
 }
-
-
