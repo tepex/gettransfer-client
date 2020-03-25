@@ -4,18 +4,27 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 
 import com.agoda.kakao.screen.Screen
-import com.kaspersky.kaspresso.kaspresso.Kaspresso
 
+import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+
+import com.kg.gettransfer.presentation.data.Constants
+
+import com.kg.gettransfer.presentation.screenelements.BookNow
+import com.kg.gettransfer.presentation.screenelements.Help
+import com.kg.gettransfer.presentation.screenelements.MainScreen
+import com.kg.gettransfer.presentation.screenelements.NavBar
+import com.kg.gettransfer.presentation.screenelements.OrdersDetails
+import com.kg.gettransfer.presentation.screenelements.OrderScreen
+import com.kg.gettransfer.presentation.screenelements.Payment
+import com.kg.gettransfer.presentation.screenelements.SearchForm
+import com.kg.gettransfer.presentation.screenelements.SettingsScreen
+import com.kg.gettransfer.presentation.screenelements.TripsScreen
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
 import org.junit.Rule
 import org.junit.Test
-
-import com.kg.gettransfer.presentation.data.Constants
-import com.kg.gettransfer.presentation.screenelements.*
-import org.junit.jupiter.api.Order
 
 class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
     flakySafetyParams.apply {

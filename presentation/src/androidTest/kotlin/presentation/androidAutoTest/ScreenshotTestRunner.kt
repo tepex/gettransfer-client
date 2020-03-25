@@ -3,6 +3,7 @@ package presentation.androidAutoTest
 import androidx.test.runner.AndroidJUnitRunner
 import com.facebook.testing.screenshot.ScreenshotRunner
 import android.os.Bundle
+import org.junit.Ignore
 
 class ScreenshotTestRunner : AndroidJUnitRunner() {
     override fun onCreate(arguments: Bundle?) {
