@@ -20,7 +20,7 @@ class ReviewRepositoryImpl(
 
     override var offerRateID: Long = DEFAULT_ID
     override var comment: String = NO_COMMENT
-    override var rates: MutableSet<ReviewRate> = mutableSetOf()
+    override var rates: HashSet<ReviewRate> = hashSetOf()
 
     override suspend fun rateTrip(): Result<Unit> {
         rates.forEach { rateItem ->

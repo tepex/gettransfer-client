@@ -21,7 +21,7 @@ class ReviewInteractor(private val repository: ReviewRepository) {
         get() = repository.comment
         set(value) { repository.comment = value }
 
-    var rates: MutableSet<ReviewRate>
+    var rates: HashSet<ReviewRate>
         get() = repository.rates
         set(value) { repository.rates = value }
 
@@ -53,7 +53,7 @@ class ReviewInteractor(private val repository: ReviewRepository) {
             communicationRating?.let { add(ReviewRate(ReviewRate.RateType.COMMUNICATION, it.toInt())) }
             vehicleRating?.let { add(ReviewRate(ReviewRate.RateType.VEHICLE, it.toInt())) }
         }
-        rates = list.toMutableSet()
+        rates = list.toHashSet()
         return list
     }
 
