@@ -10,13 +10,14 @@ import com.kg.gettransfer.presentation.androidAutoTest.BaseFun
 
 import com.kg.gettransfer.presentation.ui.SplashActivity
 
-import org.junit.Rule
-import org.junit.Test
 import com.kg.gettransfer.presentation.data.Constants
 import com.kg.gettransfer.presentation.screenelements.NavBar
 import com.kg.gettransfer.presentation.screenelements.ProfileScreen
 import com.kg.gettransfer.presentation.screenelements.SettingsScreen
 import com.kg.gettransfer.presentation.screenelements.SmsScreen
+
+import org.junit.Rule
+import org.junit.Test
 
 class PassengerLoginWithEmailCodeTest  : TestCase(Kaspresso.Builder.default().apply {
     flakySafetyParams.apply {

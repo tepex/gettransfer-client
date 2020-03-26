@@ -4,7 +4,6 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 
 import com.agoda.kakao.screen.Screen
-
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 
@@ -189,7 +188,7 @@ class TransferSmokeSuite : TestCase(Kaspresso.Builder.default().apply {
                 }
             }
             step("PayCard") {
-                PayFun.goGoodPayCard()
+                PayFun.goGoodPayCardPlatron()
             }
             step("PayCheck") {
                 Screen.idle(DELAY_VERY_BIG)
