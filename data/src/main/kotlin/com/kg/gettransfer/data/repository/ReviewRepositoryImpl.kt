@@ -20,7 +20,7 @@ class ReviewRepositoryImpl(
 
     override var offerRateID: Long = DEFAULT_ID
     override var comment: String = NO_COMMENT
-    override var rates: HashSet<ReviewRate> = hashSetOf()
+    override var rates: Set<ReviewRate> = setOf()
 
     override suspend fun rateTrip(): Result<Unit> {
         rates.forEach { rateItem ->
@@ -74,7 +74,7 @@ class ReviewRepositoryImpl(
 
     // call this when leave root screen (not dialogs!) with possible review working
     override fun releaseReviewData() {
-        rates.clear()
+        rates = setOf()
         comment = NO_COMMENT
         offerRateID = DEFAULT_ID
     }
