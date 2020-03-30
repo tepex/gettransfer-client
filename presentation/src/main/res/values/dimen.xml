@@ -673,7 +673,7 @@
 	<dimen name="fragment_sms_text_size_16sp">16sp</dimen>
 	<dimen name="fragment_sms_text_size_30sp">30sp</dimen>
 	<dimen name="fragment_sms_text_size_12sp">12sp</dimen>
-	<dimen name="fragment_sms_btn_done_margin_bottom">10dp</dimen>
+	<dimen name="fragment_sms_btn_done_margin_bottom">16dp</dimen>
 	<dimen name="fragment_sms_btn_done_vertical_margin">16dp</dimen>
 	<dimen name="fragment_sms_title_margin_top">8dp</dimen>
 	<dimen name="fragment_sms_subtitle_margin_top">24dp</dimen>

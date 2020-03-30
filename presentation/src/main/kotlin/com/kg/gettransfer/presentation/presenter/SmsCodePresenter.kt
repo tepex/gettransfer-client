@@ -31,7 +31,12 @@ class SmsCodePresenter : BaseLogInPresenter<SmsCodeView>() {
         worker.main.launch {
             initTimer()
             setTimer()
+            showCodeExpiration()
         }
+    }
+
+    private suspend fun showCodeExpiration() {
+        viewState.showCodeExpiration(configsManager.getConfigs().codeExpiration)
     }
 
     private suspend fun initTimer() {

@@ -27,6 +27,7 @@ data class ConfigsModel(
     @Embedded(prefix = ConfigsEntity.CHECKOUTCOM_CREDENTIALS)  val checkoutcomCredentials: CheckoutcomCredentialsModel,
     @Embedded(prefix = ConfigsEntity.GOOGLEPAY_CREDENTIALS)    val googlePayCredentials: GooglePayCredentialsModel,
     @ColumnInfo(name = ConfigsEntity.DEFAULT_CARD_GATEWAY)     val defaultCardGateway: String,
+    @ColumnInfo(name = ConfigsEntity.CODE_EXPIRATION)          val codeExpiration: Int,
     @PrimaryKey(autoGenerate = true) val id: Long = 15
 )
 
@@ -40,7 +41,8 @@ fun ConfigsModel.map() =
         contactEmails.list.map { it.map() },
         checkoutcomCredentials.map(),
         googlePayCredentials.map(),
-        defaultCardGateway
+        defaultCardGateway,
+        codeExpiration
     )
 
 fun ConfigsEntity.map() =
@@ -53,5 +55,6 @@ fun ConfigsEntity.map() =
         ContactEmailModelList(contactEmails.map { it.map() }),
         checkoutcomCredentials.map(),
         googlePayCredentials.map(),
-        defaultCardGateway
+        defaultCardGateway,
+        codeExpiration
     )

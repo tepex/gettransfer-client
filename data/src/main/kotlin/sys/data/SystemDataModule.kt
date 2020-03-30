@@ -58,7 +58,8 @@ val systemData = module {
                     listOf("AMEX", "JCB", "MASTERCARD", "VISA"),
                     listOf("CRYPTOGRAM_3DS")
                 ),
-            defaultCardGateway = PaymentRequest.Gateway.CHECKOUTCOM
+            defaultCardGateway = PaymentRequest.Gateway.CHECKOUTCOM,
+            codeExpiration = 30
         )
     }
     single {

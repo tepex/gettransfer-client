@@ -84,17 +84,28 @@
             android:text="@string/LNG_DONE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/btnResendCode"/>
+            app:layout_constraintBottom_toTopOf="@+id/tvCodeExpiration"/>
+
+        <TextView
+            android:id="@+id/tvCodeExpiration"
+            style="@style/sf_font_pro_text_regular_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin8"
+            android:text="@string/LNG_CODE_EXPIRATION"
+            android:textSize="@dimen/fragment_sms_text_size_12sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnResendCode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/btnResendCode"
+            style="@style/sf_font_pro_text_regular_grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/fragment_sms_resend_code_margin_bottom"
-            android:fontFamily="@font/sf_pro_text_regular"
             android:padding="@dimen/fragment_sms_resend_code_padding"
             android:text="@string/LNG_LOGIN_RESEND_ALLOW"
-            android:textColor="@color/color_gtr_grey"
             android:textSize="@dimen/fragment_sms_text_size_12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

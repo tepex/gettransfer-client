@@ -19,7 +19,8 @@ data class Configs(
     val contactEmails: List<ContactEmail>,
     val checkoutcomCredentials: CheckoutcomCredentials,
     val googlePayCredentials: GooglePayCredentials,
-    val defaultCardGateway: PaymentRequest.Gateway
+    val defaultCardGateway: PaymentRequest.Gateway,
+    val codeExpiration: Int
 ) {
 
     companion object {

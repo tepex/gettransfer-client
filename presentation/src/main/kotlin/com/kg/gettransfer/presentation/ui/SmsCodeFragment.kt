@@ -90,6 +90,10 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
         btnResendCode.text = getText(R.string.LNG_LOGIN_RESEND_ALLOW)
     }
 
+    override fun showCodeExpiration(codeExpiration: Int) {
+        tvCodeExpiration.text = getString(R.string.LNG_CODE_EXPIRATION, codeExpiration)
+    }
+
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
         Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())

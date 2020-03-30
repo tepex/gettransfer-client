@@ -430,7 +430,6 @@
     <string name="LNG_REVIEW_SENT">Your review has been sent, thanks!</string>
     <string name="LNG_WILL_BE_WAITING_FOR_YOU">Will be waiting for you:</string>
     <string name="LNG_UNEXPECTED_PAYMENT_ERROR">Unexpected error in payment process. Please call support.</string>
-
     <string name="LNG_CHECKOUT_SECURE_LABEL">Secure bank card payment</string>
     <string name="LNG_CHECKOUT_PAYING">Amount to pay:</string>
     <string name="LNG_CHECKOUT_CARD_NUMBER">Card number</string>
@@ -441,15 +440,13 @@
     <string name="LNG_ERROR_PASSWORD_LINK">Invalid password link</string>
     <string name="LNG_ERROR_OFFERED_PRICE_MIN">Value must be greater than or equal to %s</string>
     <string name="LNG_ERROR_OFFERED_PRICE_MAX">Value must be less than or equal to %s</string>
-
     <string name="LNG_KM">km</string>
     <string name="LNG_MI">miles</string>
     <string name="LNG_MI_ONE">mile</string>
     <string name="LNG_MI_FEW">miles</string>
-
     <string name="LNG_LIMITED_TIME_OFFER">LIMITED\nTIME OFFER</string>
     <string name="LNG_OFFER_AVAILABLE_UNTIL">Offer is available until\n%s</string>
-
     <string name="LNG_CHECKOUT_WE_ACCEPT">We accept</string>
     <string name="LNG_CHECKOUT_SECURED">Secured</string>
+    <string name="LNG_CODE_EXPIRATION">Code expiration %d minutes</string>
 </resources>

@@ -22,9 +22,10 @@ data class ConfigsModel(
     @SerializedName(ConfigsEntity.CONTACT_EMAILS)           @Expose val contactEmails: ContactEmailsWrapperModel,
     @SerializedName(ConfigsEntity.DEFAULT_CARD_GATEWAY)     @Expose val defaultCardGateway: String,
     @SerializedName(ConfigsEntity.CHECKOUTCOM_CREDENTIALS)
-        @Expose val checkoutcomCredentials: CheckoutcomCredentialsModel,
+    @Expose val checkoutcomCredentials: CheckoutcomCredentialsModel,
     @SerializedName(ConfigsEntity.GOOGLEPAY_CREDENTIALS)
-        @Expose val googlePayCredentials: GooglePayCredentialsModel
+    @Expose val googlePayCredentials: GooglePayCredentialsModel,
+    @SerializedName(ConfigsEntity.CODE_EXPIRATION) @Expose val codeExpiration: Int
 )
 
 fun ConfigsModel.map() =
@@ -37,5 +38,6 @@ fun ConfigsModel.map() =
         contactEmails.map { it.map() },
         checkoutcomCredentials.map(),
         googlePayCredentials.map(),
-        defaultCardGateway
+        defaultCardGateway,
+        codeExpiration
     )
