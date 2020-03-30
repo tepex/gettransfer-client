@@ -6,7 +6,7 @@ import com.kg.gettransfer.domain.model.ReviewRate
 interface ReviewRepository {
     var offerRateID: Long
     var comment: String
-    var rates: MutableSet<ReviewRate>
+    var rates: Set<ReviewRate>
 
     suspend fun rateTrip(): Result<Unit>
 
