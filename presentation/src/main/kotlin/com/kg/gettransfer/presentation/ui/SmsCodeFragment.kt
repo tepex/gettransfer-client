@@ -91,7 +91,7 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
     }
 
     override fun showCodeExpiration(codeExpiration: Int) {
-        tvCodeExpiration.text = getString(R.string.LNG_CODE_EXPIRATION, codeExpiration)
+        tvCodeExpiration.text = getString(R.string.LNG_CODE_EXPIRATION, codeExpiration.toString())
     }
 
     override fun setError(e: ApiException) {

@@ -448,5 +448,5 @@
     <string name="LNG_OFFER_AVAILABLE_UNTIL">Offer is available until\n%s</string>
     <string name="LNG_CHECKOUT_WE_ACCEPT">We accept</string>
     <string name="LNG_CHECKOUT_SECURED">Secured</string>
-    <string name="LNG_CODE_EXPIRATION">Code expiration %d minutes</string>
+    <string name="LNG_CODE_EXPIRATION">Code expiration %s minutes</string>
 </resources>
