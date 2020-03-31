@@ -29,7 +29,8 @@ data class ConfigsEntity(
     val contactEmails: List<ContactEmailEntity>,
     val checkoutcomCredentials: CheckoutcomCredentialsEntity,
     val googlePayCredentials: GooglePayCredentialsEntity,
-    val defaultCardGateway: String
+    val defaultCardGateway: String,
+    val codeExpiration: Int
 ) {
 
     companion object {
@@ -43,6 +44,7 @@ data class ConfigsEntity(
         const val CHECKOUTCOM_CREDENTIALS  = "checkoutcom_credentials"
         const val GOOGLEPAY_CREDENTIALS    = "googlepay_credentials"
         const val DEFAULT_CARD_GATEWAY     = "default_card_gateway"
+        const val CODE_EXPIRATION          = "verification_code_expiration"
     }
 }
 
@@ -56,7 +58,8 @@ fun ConfigsEntity.map() =
         contactEmails.map { it.map() },
         checkoutcomCredentials.map(),
         googlePayCredentials.map(),
-        defaultCardGateway.mapGateway()
+        defaultCardGateway.mapGateway(),
+        codeExpiration
     )
 
 fun String.mapGateway(): PaymentRequest.Gateway = enumValueOf<PaymentRequest.Gateway>(toUpperCase(Locale.US))
