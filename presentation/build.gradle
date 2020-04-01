@@ -231,6 +231,7 @@ appcenter {
 
 sentry {
     autoProguardConfig true
+    autoUpload true
 }
 
 dependencies {
