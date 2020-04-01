@@ -36,7 +36,6 @@ ext {
     firebase_iid_version       = "17.0.4"
     firebase_messaging_version = "20.1.0"
     glide_version              = "4.10.0"
-    slf4j_timber_version       = "1.0.1"
     socket_io_version          = "1.0.0"
     libphonenumber_version     = "8.11.1"
     appmetrica_version         = "3.8.0"
@@ -285,7 +284,6 @@ dependencies {
 
     // Logger
     implementation libs.timber
-    implementation "at.favre.lib:slf4j-timber:$slf4j_timber_version"
 
     //Firebase
     // https://firebase.google.com/support/release-notes/android
