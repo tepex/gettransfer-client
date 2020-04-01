@@ -12,7 +12,6 @@ import com.kg.gettransfer.extensions.showKeyboard
 import com.kg.gettransfer.presentation.view.BaseView
 import io.sentry.core.Sentry
 
-
 import org.koin.core.KoinComponent
 import timber.log.Timber
 

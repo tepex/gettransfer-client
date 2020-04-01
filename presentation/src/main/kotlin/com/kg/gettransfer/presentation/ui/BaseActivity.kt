@@ -66,7 +66,6 @@ import com.kg.gettransfer.utilities.LocaleManager
 
 import io.sentry.core.Sentry
 
-
 import kotlinx.android.synthetic.main.toolbar.view.*
 
 import org.koin.android.ext.android.inject
@@ -281,7 +280,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun setError(e: ApiException) {
         Timber.e(e, "code: ${e.code}")
-        Sentry.addBreadcrumb((e.details))
+        Sentry.addBreadcrumb(e.details)
         Sentry.captureException(e)
         if (e.code != ApiException.NETWORK_ERROR) {
             Utils.showError(
@@ -293,7 +292,7 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setError(e: DatabaseException) {
-        Sentry.addBreadcrumb(("CacheError: ${e.details}"))
+        Sentry.addBreadcrumb("CacheError: ${e.details}")
         Sentry.captureException(e)
     }
 

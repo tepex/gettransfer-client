@@ -21,7 +21,6 @@ import com.kg.gettransfer.presentation.view.LogInView
 
 import io.sentry.core.Sentry
 
-
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 import kotlinx.android.synthetic.main.view_input_password.*

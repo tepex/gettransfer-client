@@ -148,9 +148,12 @@ class GTApplication : MultiDexApplication() {
         SentryAndroid.init(this) { options: SentryAndroidOptions ->
             // register the callback as an option
             options.beforeSend = BeforeSendCallback { event: SentryEvent?, _: Any? ->
-                //if the application is in debug mode discard the events
-                if (BuildConfig.DEBUG) return@BeforeSendCallback null
-                else return@BeforeSendCallback event
+                // if the application is in debug mode discard the events
+                if (BuildConfig.DEBUG) {
+                    return@BeforeSendCallback null
+                } else {
+                    return@BeforeSendCallback event
+                }
             }
         }
     }

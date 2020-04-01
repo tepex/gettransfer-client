@@ -61,7 +61,6 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import io.sentry.core.Sentry
 
-
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
 import kotlinx.android.synthetic.main.offer_tiny_payment.*

@@ -32,7 +32,6 @@ import com.kg.gettransfer.utilities.CardDateFormatter
 
 import io.sentry.core.Sentry
 
-
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_checkoutcom_card_field.*

@@ -24,7 +24,6 @@ import com.kg.gettransfer.presentation.view.SignUpView
 
 import io.sentry.core.Sentry
 
-
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
 
