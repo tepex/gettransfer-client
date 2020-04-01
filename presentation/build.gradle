@@ -284,6 +284,7 @@ dependencies {
 
     // Logger
     implementation libs.timber
+    implementation libs.slf4j
 
     //Firebase
     // https://firebase.google.com/support/release-notes/android
