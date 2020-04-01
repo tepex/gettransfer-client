@@ -30,8 +30,8 @@ import com.kg.gettransfer.presentation.presenter.CheckoutcomPaymentPresenter.Com
 import com.kg.gettransfer.presentation.view.CheckoutcomPaymentView
 import com.kg.gettransfer.utilities.CardDateFormatter
 
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
+
 
 import kotlinx.android.synthetic.main.activity_checkout_payment.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -172,9 +172,8 @@ class CheckoutcomPaymentActivity : BaseActivity(), CheckoutcomPaymentView {
 
     override fun setError(e: ApiException) {
         Timber.e(e, "code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(
-            BreadcrumbBuilder().setMessage("Checkoutcom token error: ${e.details}").build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb("Checkoutcom token error: ${e.details}")
+        Sentry.captureException(e)
         if (e.code == ApiException.NETWORK_ERROR) {
             Utils.showError(this, false, getString(R.string.LNG_NETWORK_ERROR))
         } else {

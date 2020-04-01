@@ -10,8 +10,8 @@ import com.kg.gettransfer.extensions.hideKeyboard
 import com.kg.gettransfer.extensions.showKeyboard
 
 import com.kg.gettransfer.presentation.view.BaseView
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
+
 
 import org.koin.core.KoinComponent
 import timber.log.Timber
@@ -66,8 +66,8 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
 
     override fun setError(e: ApiException) {
         Timber.e(e, "code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         if (e.code != ApiException.NETWORK_ERROR) {
             Utils.showError(
                 requireContext(),
@@ -78,8 +78,8 @@ abstract class BaseFragment : MvpAppCompatFragment(), KoinComponent, BaseView {
     }
 
     override fun setError(e: DatabaseException) {
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb("CacheError: ${e.details}")
+        Sentry.captureException(e)
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {

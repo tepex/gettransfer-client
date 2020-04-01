@@ -24,7 +24,7 @@ buildscript {
         room_version          = "2.2.3"
         dexcount_version      = "1.0.2"
         detekt_version        = "1.3.0"
-        sentry_version        = "1.7.31"
+        sentry_version        = "1.7.33"
         nav_version           = "2.2.0-rc04"
         appcenter_plugin_ver  = "1.1.18"
 

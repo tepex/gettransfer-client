@@ -45,7 +45,7 @@ ext {
     anko_version               = "0.10.8"
     flexbox_layout_version     = "2.0.0"
     pageindicator_version      = "1.0.3"
-    sentry_version             = "1.7.30"
+    sentry_version             = "2.0.2"
     appsflyer_version          = "5.1.0"
     installreferrer_version    = "1.1.1"
     life_cycle_version         = "1.1.1"
@@ -139,6 +139,7 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            multiDexKeepProguard file('multidex-config.pro')
         }
         debug {
             //applicationIdSuffix ".debug"
@@ -319,7 +320,7 @@ dependencies {
     implementation "com.romandanylyk:pageindicatorview:$pageindicator_version"
 
     //sentry
-    implementation "io.sentry:sentry-android:$sentry_version"
+    implementation "io.sentry:sentry-android-core:$sentry_version"
 
     //appsflyer
     implementation "com.appsflyer:af-android-sdk:$appsflyer_version@aar"

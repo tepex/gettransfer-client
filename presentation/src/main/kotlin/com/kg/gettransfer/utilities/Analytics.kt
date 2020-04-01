@@ -26,7 +26,7 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
 
-import io.sentry.Sentry
+import io.sentry.core.Sentry
 
 import java.util.Currency
 
@@ -211,7 +211,7 @@ class Analytics(
             currencyCode = sessionInteractor.currency.code
             currency = Currency.getInstance(currencyCode)
             price = offer?.price?.amount ?: bookNowOffer?.amount ?: (-1.0).also {
-                Sentry.capture(
+                Sentry.captureMessage(
                         """when try to get offer for analytics of payment - server return invalid value:
                             |offer is null  - ${offer == null}
                             |offer.price is null  - ${offer?.price == null}

@@ -59,8 +59,8 @@ import com.kg.gettransfer.presentation.view.CreateOrderView
 import com.kg.gettransfer.presentation.view.PaymentOfferView
 import com.kg.gettransfer.presentation.view.Screens
 
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
+
 
 import kotlinx.android.synthetic.main.activity_payment_offer.*
 import kotlinx.android.synthetic.main.layout_payments.*
@@ -474,8 +474,8 @@ class PaymentOfferActivity : BaseActivity(),
 
     override fun setError(e: ApiException) {
         Timber.e(e, "code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         val errorText = when {
             e.isBigPriceError()                  -> getString(R.string.LNG_BIG_PRICE_ERROR)
             e.isOfferUnavailableError()          -> getString(R.string.LNG_OFFER_NO_LONGER_AVAILABLE)

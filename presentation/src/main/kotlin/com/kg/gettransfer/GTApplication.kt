@@ -1,5 +1,7 @@
 package com.kg.gettransfer
 
+// import leakcanary.AppWatcher
+
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
@@ -12,16 +14,16 @@ import com.google.firebase.FirebaseApp
 import com.kg.gettransfer.cache.cacheModule
 import com.kg.gettransfer.data.dataModule
 import com.kg.gettransfer.di.*
-
 import com.kg.gettransfer.remote.remoteModule
 import com.kg.gettransfer.remote.socketModule
 import com.kg.gettransfer.service.OneSignalNotificationOpenedHandler
-
 import com.kg.gettransfer.sys.cache.systemCache
 import com.kg.gettransfer.sys.data.systemData
 import com.kg.gettransfer.sys.remote.systemRemote
-
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
+
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.crashes.Crashes
 
 import com.onesignal.OneSignal
 
@@ -29,11 +31,10 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import com.yandex.metrica.push.YandexMetricaPush
 
-import io.sentry.Sentry
-import io.sentry.android.AndroidSentryClientFactory
-// import leakcanary.AppWatcher
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.crashes.Crashes
+import io.sentry.android.core.SentryAndroid
+import io.sentry.android.core.SentryAndroidOptions
+import io.sentry.core.SentryEvent
+import io.sentry.core.SentryOptions.BeforeSendCallback
 
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -144,8 +145,13 @@ class GTApplication : MultiDexApplication() {
     }
 
     private fun setupSentry() {
-        if (!BuildConfig.DEBUG) {
-            Sentry.init(getString(R.string.sentryDsn), AndroidSentryClientFactory(applicationContext))
+        SentryAndroid.init(this) { options: SentryAndroidOptions ->
+            // register the callback as an option
+            options.beforeSend = BeforeSendCallback { event: SentryEvent?, _: Any? ->
+                //if the application is in debug mode discard the events
+                if (BuildConfig.DEBUG) return@BeforeSendCallback null
+                else return@BeforeSendCallback event
+            }
         }
     }
 

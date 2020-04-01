@@ -45,7 +45,7 @@ import com.kg.gettransfer.presentation.view.Screens
 
 import com.kg.gettransfer.utilities.Analytics
 
-import io.sentry.Sentry
+import io.sentry.core.Sentry
 
 import moxy.InjectViewState
 
@@ -375,7 +375,7 @@ class PaymentOfferPresenter : BasePresenter<PaymentOfferView>() {
             dropInRequest.paypalRequest(paypal)
             viewState.startPaypal(dropInRequest, token)
         } catch (e: InvalidArgumentException) {
-            Sentry.capture(e)
+            Sentry.captureException(e)
             viewState.blockInterface(false)
         }
     }

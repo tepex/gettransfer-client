@@ -9,7 +9,6 @@ import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
 
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 abstract class BaseRepository : KoinComponent {
 
