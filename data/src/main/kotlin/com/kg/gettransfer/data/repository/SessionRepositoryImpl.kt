@@ -50,24 +50,6 @@ class SessionRepositoryImpl(
 
     override var tempUser = User.EMPTY.copy()
 
-    override var userEmail: String?
-        get() = preferencesCache.userEmail
-        set(value) {
-            preferencesCache.userEmail = value
-        }
-
-    override var userPhone: String?
-        get() = preferencesCache.userPhone
-        set(value) {
-            preferencesCache.userPhone = value
-        }
-
-    override var userPassword: String?
-        get() = preferencesCache.userPassword
-        set(value) {
-            preferencesCache.userPassword = value
-        }
-
     override var appLanguage: String
         get() = preferencesCache.appLanguage
         set(value) { preferencesCache.appLanguage = value }
@@ -124,11 +106,6 @@ class SessionRepositoryImpl(
                 factory.retrieveCacheDataStore().setAccount(entity)
                 account = entity.map(configsRepository.getResult().getModel())
             }
-            with(account.user.profile) {
-                userEmail = email
-                userPhone = phone
-            }
-            if (pass != null && repeatedPass != null) userPassword = pass
         }
         return Result(account, result.error?.map())
     }
@@ -146,19 +123,6 @@ class SessionRepositoryImpl(
             result.entity?.let { entity ->
                 factory.retrieveCacheDataStore().setAccount(entity)
                 account = entity.map(configsRepository.getResult().getModel())
-            }
-            if (!withSmsCode) {
-                when (contact) {
-                    is Contact.EmailContact -> {
-                        userEmail = contact.email
-                        userPhone = null
-                    }
-                    is Contact.PhoneContact -> {
-                        userEmail = null
-                        userPhone = contact.phone
-                    }
-                }
-                userPassword = password
             }
         }
         return Result(account, result.error?.map())
@@ -211,14 +175,8 @@ class SessionRepositoryImpl(
         }
         if (result.error == null) {
             when (contact) {
-                is Contact.EmailContact -> {
-                    account.user.profile.email = contact.email
-                    userEmail = contact.email
-                }
-                is Contact.PhoneContact -> {
-                    account.user.profile.phone = contact.phone
-                    userPhone = contact.phone
-                }
+                is Contact.EmailContact -> account.user.profile.email = contact.email
+                is Contact.PhoneContact -> account.user.profile.phone = contact.phone
             }
         }
         return Result(result.entity != null && result.entity, result.error?.map())

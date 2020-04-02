@@ -14,9 +14,6 @@ interface SessionRepository {
     val isInitialized: Boolean
     val account: Account
     val tempUser: User
-    var userEmail: String?
-    var userPhone: String?
-    var userPassword: String?
     var appLanguage: String
     var isAppLanguageChanged: Boolean
 

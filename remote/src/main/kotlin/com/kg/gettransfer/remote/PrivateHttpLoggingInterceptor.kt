@@ -58,7 +58,7 @@ class PrivateHttpLoggingInterceptor : Interceptor, KoinComponent {
         val logBody = logger.isDebugEnabled
         val path = chain.request().url().url().path
         val logHeaders = (logBody || logger.isInfoEnabled) &&
-            !(path?.contains(Api.API_LOGIN) ?: false) &&
+            !(path?.contains(Api.API_ACCOUNT_LOGIN) ?: false) &&
             !(path?.contains(ApiCore.PARAM_API_KEY) ?: false)
 
         val request = chain.request()

@@ -45,11 +45,7 @@ class ConfigsManager : KoinComponent {
         /* We should await for preferences, cause we need to know endpoint to call network
            getMobileConfigs and getConfigs */
         val preferences = backgroundScope.async { getPreferences() }.await().getModel()
-        val endpoint = if (BuildConfig.FLAVOR == "prod") {
-            defaultEndpoint
-        } else {
-            endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
-        }
+        val endpoint = endpoints.find { it == preferences.endpoint } ?: defaultEndpoint
 
         backgroundScope.async { setEndpoint(endpoint) }.await()
         backgroundScope.async { setIpApiKey(ipApiKey) }.await()
