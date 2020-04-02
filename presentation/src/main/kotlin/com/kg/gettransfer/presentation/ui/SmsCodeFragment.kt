@@ -15,8 +15,8 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SmsCodePresenter
 import com.kg.gettransfer.presentation.view.LogInView
 import com.kg.gettransfer.presentation.view.SmsCodeView
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
+
 import kotlinx.android.synthetic.main.fragment_sms_code.*
 import kotlinx.serialization.json.JSON
 // import leakcanary.AppWatcher
@@ -96,8 +96,8 @@ class SmsCodeFragment : BaseLogInFragment(), SmsCodeView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         if (e.code == ApiException.NO_USER) {
             context?.let { pinView.setTextColor(ContextCompat.getColor(it, R.color.color_gtr_red)) }
             return

@@ -64,8 +64,7 @@ import com.kg.gettransfer.presentation.view.Screens
 import com.kg.gettransfer.utilities.AppLifeCycleObserver
 import com.kg.gettransfer.utilities.LocaleManager
 
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
 
 import kotlinx.android.synthetic.main.toolbar.view.*
 
@@ -281,8 +280,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
 
     override fun setError(e: ApiException) {
         Timber.e(e, "code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         if (e.code != ApiException.NETWORK_ERROR) {
             Utils.showError(
                 this,
@@ -293,8 +292,8 @@ abstract class BaseActivity : MvpAppCompatActivity(), BaseView {
     }
 
     override fun setError(e: DatabaseException) {
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb("CacheError: ${e.details}")
+        Sentry.captureException(e)
     }
 
     override fun setTransferNotFoundError(transferId: Long, dismissCallBack: (() -> Unit)?) {

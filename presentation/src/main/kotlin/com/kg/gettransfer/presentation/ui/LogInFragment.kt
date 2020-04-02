@@ -19,8 +19,7 @@ import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PA
 import com.kg.gettransfer.presentation.ui.MainLoginActivity.Companion.INVALID_PHONE
 import com.kg.gettransfer.presentation.view.LogInView
 
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
 
 import kotlinx.android.synthetic.main.fragment_log_in.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
@@ -114,8 +113,8 @@ class LogInFragment : BaseLogInFragment(), LogInView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         val titleError = getTitleError(e)
         when (e.code) {
             ApiException.NOT_FOUND -> BottomSheetDialog

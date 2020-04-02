@@ -22,8 +22,7 @@ import com.kg.gettransfer.extensions.setThrottledClickListener
 import com.kg.gettransfer.presentation.presenter.SignUpPresenter
 import com.kg.gettransfer.presentation.view.SignUpView
 
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
 
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.view_input_account_field.view.*
@@ -166,8 +165,8 @@ class SignUpFragment : MvpAppCompatFragment(), SignUpView {
 
     override fun setError(e: ApiException) {
         Timber.e("code: ${e.code}")
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage(e.details).build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb(e.details)
+        Sentry.captureException(e)
         textError = e.message ?: getString(R.string.LNG_ERROR)
 
         getErrorType(e)

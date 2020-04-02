@@ -7,8 +7,8 @@ import com.kg.gettransfer.domain.ApiException
 import com.kg.gettransfer.domain.DatabaseException
 import com.kg.gettransfer.presentation.presenter.BaseLogInPresenter
 import com.kg.gettransfer.presentation.view.OpenDeepLinkScreenView
-import io.sentry.Sentry
-import io.sentry.event.BreadcrumbBuilder
+import io.sentry.core.Sentry
+
 import moxy.MvpAppCompatFragment
 import org.jetbrains.anko.longToast
 import pub.devrel.easypermissions.EasyPermissions
@@ -101,8 +101,8 @@ abstract class BaseLogInFragment : MvpAppCompatFragment(),
     override fun setError(finish: Boolean, @StringRes errId: Int, vararg args: String?) {}
 
     override fun setError(e: DatabaseException) {
-        Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("CacheError: ${e.details}").build())
-        Sentry.capture(e)
+        Sentry.addBreadcrumb("CacheError: ${e.details}")
+        Sentry.captureException(e)
     }
 
     override fun blockInterface(block: Boolean, useSpinner: Boolean) {
